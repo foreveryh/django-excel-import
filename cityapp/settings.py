@@ -12,7 +12,7 @@ class Base(Settings):
 
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.sqlite3',
             'NAME': 'cityapp',
             'USER': 'cityapp',
         }
@@ -31,11 +31,7 @@ class Base(Settings):
 
         'south',
         'django_extensions',
-        'django_ses',
-
-        'userena',
         'guardian',
-        'easy_thumbnails',
     )
     LANGUAGE_CODE = 'en-gb'
     MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
@@ -76,14 +72,6 @@ class Base(Settings):
     LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
     LOGIN_URL = '/accounts/signin/'
     LOGOUT_URL = '/accounts/signout/'
-
-    # django-ses
-    EMAIL_BACKEND = 'django_ses.SESBackend'
-    AWS_SES_ACCESS_KEY_ID = ''
-    AWS_SES_SECRET_ACCESS_KEY = ''
-    AWS_SES_REGION_NAME = 'us-east-1'
-    AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
-
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES

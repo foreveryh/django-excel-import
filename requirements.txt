@@ -1,4 +1,0 @@
-https://github.com/gotcha/ipdb/tarball/0.7
-https://github.com/jezdez/django-configurations/tarball/master
-https://github.com/django-extensions/django-extensions/tarball/0.9
-https://github.com/lukaszb/django-guardian/tarball/v1.0.4
