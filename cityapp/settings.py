@@ -27,11 +27,12 @@ class Base(Settings):
         'django.contrib.staticfiles',
         'django.contrib.admin',
         'django.contrib.admindocs',
-        'django.contrib.gis',
+#        'django.contrib.gis',
 
         'south',
         'django_extensions',
         'guardian',
+        'excel_handler',
     )
     LANGUAGE_CODE = 'en-gb'
     MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
@@ -65,7 +66,7 @@ class Base(Settings):
     ANONYMOUS_USER_ID = -1
     AUTH_PROFILE_MODULE = 'core.UserProfile'
     AUTHENTICATION_BACKENDS = (
-        'userena.backends.UserenaAuthenticationBackend',
+    #   'userena.backends.UserenaAuthenticationBackend',
         'guardian.backends.ObjectPermissionBackend',
         'django.contrib.auth.backends.ModelBackend',
     )
