@@ -2,29 +2,34 @@
 
 <HEAD>
 
-    <TITLE>Load data from EXCEL: {{ form_class_name }}</TITLE>
+    <TITLE>城市数据导入</TITLE>
 
 </HEAD>
 
 <BODY>
 
-<h1>Load data from EXCEL: {{ form_class_name }}</h1>
+<h1>导入Excel</h1>
 
-<form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype #}>{% csrf_token %}
+<form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype #}>
+    {% csrf_token %}
     <table>
         {{ form }}
         <tr>
             <th/>
             <td>
-                <input type="submit" value="Load data" />
+                {% if uploaded and converted_data %}
+                    <input type="submit" value="开始导入数据"/>
+                {% else %}
+                    <input type="submit" value="上传"/>
+                {% endif %}
             </td>
         </tr>
     </table>
 </form>
 
 
-{% if with_good and converted_data %}
-    <h3>Check:</h3>
+{% if uploaded and converted_data %}
+    <h3>请检查上传的Excel表格是否正确:</h3>
     <div class="results">
         <table>
             <tr>
@@ -34,9 +39,9 @@
                     {% endfor %}
                 {% endwith %}
             </tr>
-            {% for hotel_data in converted_data %}
+            {% for item_data in converted_data %}
                 <tr>
-                    {% for key, value in hotel_data.iteritems %}
+                    {% for key, value in item_data.iteritems %}
                         <td><div style="white-space: pre-wrap;">{{ value }}</div></td>
                     {% endfor %}
                 </tr>

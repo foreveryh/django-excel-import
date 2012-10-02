@@ -10,8 +10,7 @@ class ImportExcelForm(forms.Form):
 
     excel_file = forms.FileField(required=False)
     converted_data = forms.CharField(widget=forms.HiddenInput, required=False)
-    comment = forms.CharField(required=False)
-    is_good = forms.BooleanField(widget=forms.HiddenInput, required=False)
+    is_good = forms.BooleanField(widget=forms.HiddenInput, required=False, label=u'确定导入')
 
     def clean_converted_data(self):
         converted_data = self.cleaned_data['converted_data']
@@ -45,8 +44,8 @@ class ImportExcelForm(forms.Form):
             if not row:
                 continue
             values = map(lambda cell: cell.value, row)
-            hotel_data = SortedDict(zip(fields, values))
-            converted_data.append(hotel_data)
+            item_data = SortedDict(zip(fields, values))
+            converted_data.append(item_data)
         return converted_data
 
     def update_callback(self, request, converted_data):

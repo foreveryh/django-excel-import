@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.utils import simplejson
 from django.utils.datastructures import MergeDict
 from django.views.generic.simple import direct_to_template
+from django.views.generic import FormView
 from cityapp.apps.excel_handler.forms import ImportExcelForm
 import datetime
 
@@ -39,3 +40,26 @@ def import_excel(request, FormClass=ImportExcelForm, template_name='excel_handle
         'form': form, 'form_class_name': form_class_name, 'with_good': with_good,
         })
     return direct_to_template(request, template_name, extra_context)
+
+class ImportExcel(FormView):
+    template_name = 'excel_handler/excel_import.html'
+    form_class = ImportExcelForm
+    success_url = ''
+    extra_context = {}
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        try:
+            converted_data = form.get_converted_data(cleaned_data)
+        except Exception, e:
+            error_message = u'Error with excel file: %s' % str(e)
+            form.errors['excel_file'] = ErrorList([error_message])
+        else:
+            if form.cleaned_data['is_good']:
+                return super(ImportExcel, self).form_valid(form)
+            initial =  {'converted_data': simplejson.dumps(converted_data) }
+            form = self.get_form_class()(initial=initial)
+            form.fields['is_good'].widget = forms.CheckboxInput()
+            form.fields['excel_file'].widget = forms.HiddenInput()
+            self.extra_context.update({'form': form , 'uploaded': True, 'converted_data': converted_data})
+            return super(ImportExcel, self).render_to_response(self.extra_context)
+
