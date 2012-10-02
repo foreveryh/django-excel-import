@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.utils import simplejson
 from django.utils.datastructures import MergeDict
 from django.views.generic.simple import direct_to_template
-from forms import ImportExcelForm
+from cityapp.apps.excel_handler.forms import ImportExcelForm
 import datetime
 
 

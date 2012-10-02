@@ -1,5 +1,5 @@
-#-*- coding:utf-8 -*-
-
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import CreationDateTimeField
@@ -9,6 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class Area(models.Model):
     class Meta:
+        app_label = 'manager'
         verbose_name = verbose_name_plural = _('城市')
         permissions = (
             ('view_area', 'View Area'),

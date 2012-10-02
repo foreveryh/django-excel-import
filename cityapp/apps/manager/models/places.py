@@ -1,15 +1,16 @@
-#-*- coding:utf-8 -*-
-
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, UUIDField
-from topics import Topic
-from areas import Area
-import logging
+from django_extensions.db.fields import  ModificationDateTimeField, UUIDField
+from cityapp.apps.manager.models.topics import Topic
+from cityapp.apps.manager.models.areas import Area
 
 class Place(models.Model):
     class Meta:
+        app_label = 'manager'
         verbose_name = verbose_name_plural = _('地点')
+
     id = UUIDField(primary_key=True)
     zh_name = models.CharField(_('中文名'), max_length=50)
     en_name = models.CharField(_('英文名'), max_length=100)

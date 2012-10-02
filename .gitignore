@@ -1,1 +1,21 @@
+*.py [co]
+
+#packages
+*.egg
+*.egg-info
+
+#django static
+cityapp/static/*
+cityapp/media/*
+grappelli/*
+admin/*
+
+#pycharm
 .idea
+
+#database
+.sql
+
+*.DS_Store
+
+

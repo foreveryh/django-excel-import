@@ -13,13 +13,19 @@ class Base(Settings):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'cityapp',
-            'USER': 'cityapp',
+            'NAME': 'cityapp.sql',
+            'USER': '',                      # Not used with sqlite3.
+            'PASSWORD': '',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         }
     }
+    USE_SOUTH = True
+
     DEFAULT_FROM_EMAIL = 'noreply@tukeq.com'.format(DOMAIN)
     INSTALLED_APPS = (
         'grappelli',
+        'django.contrib.admin',
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
@@ -35,9 +41,11 @@ class Base(Settings):
         'guardian',
         'userena',
         'easy_thumbnails',
-        'excel_handler',
+        'cityapp.apps.excel_handler',
+        'cityapp.apps.manager',
     )
-    LANGUAGE_CODE = 'en-gb'
+    TIME_ZONE = 'Asia/Shanghai'
+    LANGUAGE_CODE = 'zh-cn'
     MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
 
     @property
@@ -52,7 +60,11 @@ class Base(Settings):
         #'cityapp.middleware.threadlocal.ThreadLocalMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',)
-    
+
+    TEMPLATE_CONTEXT_PROCESSORS =(
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
+    )
     ROOT_URLCONF = 'cityapp.urls'
     SECRET_KEY = '@5ae)r=gfw20@+4x0^-wkdq&amp;jevw1lv6_%m!q(9cm5g5#%(x!2'
     SERVER_EMAIL = 'robot@tukeq.com'.format(DOMAIN)
@@ -61,14 +73,13 @@ class Base(Settings):
     STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'), )
     STATIC_URL = '/static/'
     TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
-    TIME_ZONE = 'Europe/London'
     USE_L10N = True
     USE_TZ = True
     WSGI_APPLICATION = 'cityapp.wsgi.application'
 
     # django-userena / django-guardian
     ANONYMOUS_USER_ID = -1
-    AUTH_PROFILE_MODULE = 'core.UserProfile'
+    AUTH_PROFILE_MODULE = 'manager.UserProfile'
     AUTHENTICATION_BACKENDS = (
         'userena.backends.UserenaAuthenticationBackend',
         'guardian.backends.ObjectPermissionBackend',
@@ -77,11 +88,11 @@ class Base(Settings):
     LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
     LOGIN_URL = '/accounts/signin/'
     LOGOUT_URL = '/accounts/signout/'
+    USERENA_LANGUAGE_FIELD = 'zh_CN'
+
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES
-    DATABASES['default']['HOST'] = 'localhost'
-    DATABASES['default']['PASSWORD'] = 'cityapp'
     DEBUG = True
     INTERNAL_IPS = ('127.0.0.1',)
     TEMPLATE_DEBUG = True
