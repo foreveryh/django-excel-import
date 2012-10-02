@@ -17,8 +17,9 @@ class Base(Settings):
             'USER': 'cityapp',
         }
     }
-    DEFAULT_FROM_EMAIL = 'noreply@{}'.format(DOMAIN)
+    DEFAULT_FROM_EMAIL = 'noreply@tukeq.com'.format(DOMAIN)
     INSTALLED_APPS = (
+        'grappelli',
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
@@ -32,6 +33,8 @@ class Base(Settings):
         'south',
         'django_extensions',
         'guardian',
+        'userena',
+        'easy_thumbnails',
         'excel_handler',
     )
     LANGUAGE_CODE = 'en-gb'
@@ -39,7 +42,7 @@ class Base(Settings):
 
     @property
     def MEDIA_URL(self):
-        return '{}media/'.format(self.STATIC_URL)
+        return 'city.tukeq.com/media/'.format(self.STATIC_URL)
 
     MIDDLEWARE_CLASSES = (
         'django.middleware.common.CommonMiddleware',
@@ -49,9 +52,10 @@ class Base(Settings):
         #'cityapp.middleware.threadlocal.ThreadLocalMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',)
+    
     ROOT_URLCONF = 'cityapp.urls'
     SECRET_KEY = '@5ae)r=gfw20@+4x0^-wkdq&amp;jevw1lv6_%m!q(9cm5g5#%(x!2'
-    SERVER_EMAIL = 'robot@{}'.format(DOMAIN)
+    SERVER_EMAIL = 'robot@tukeq.com'.format(DOMAIN)
     SITE_ID = 1
     SETTINGS_MODULE = 'cityapp.settings'
     STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'), )
@@ -66,7 +70,7 @@ class Base(Settings):
     ANONYMOUS_USER_ID = -1
     AUTH_PROFILE_MODULE = 'core.UserProfile'
     AUTHENTICATION_BACKENDS = (
-    #   'userena.backends.UserenaAuthenticationBackend',
+        'userena.backends.UserenaAuthenticationBackend',
         'guardian.backends.ObjectPermissionBackend',
         'django.contrib.auth.backends.ModelBackend',
     )

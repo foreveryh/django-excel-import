@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     #url(r'^accounts/', include('userena.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^import/', import_excel)
+    url(r'^import/', import_excel),
+    url(r'^grappelli/', include('grappelli.urls')),
 ) + staticfiles_urlpatterns()
