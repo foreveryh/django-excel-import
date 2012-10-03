@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load bootstrap_toolkit %}
+{% load dajaxice_templatetags %}
+<html>
+<head>
+    {% block meta_tags %}{% endblock %}
+    <title>
+        {% block title %}城市App{% endblock %}
+    </title>
+    {% block stylesheets %}
+        {% bootstrap_stylesheet_tag %}
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+            }
+        </style>
+    {% endblock %}
+    {% block javascript %}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        {% dajaxice_js_import %}
+        {% bootstrap_javascript_tag "tab" %}
+    {% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <header class="navbar navbar-fixed-top">
+        {% include "city_viewer/navigation.html" %}
+    </header>
+    <div id="main" role="main">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

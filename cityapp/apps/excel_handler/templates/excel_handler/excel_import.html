@@ -1,15 +1,8 @@
-<HTML>
-
-<HEAD>
-
-    <TITLE>城市数据导入</TITLE>
-
-</HEAD>
-
-<BODY>
-
-<h1>导入Excel</h1>
-
+{% extends "city_viewer/base.html" %}
+{% block content %}
+<div class="row-fluid">
+    <div class="span4">
+        <h3>导入Excel</h3>
 <form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype #}>
     {% csrf_token %}
     <table>
@@ -18,7 +11,7 @@
             <th/>
             <td>
                 {% if uploaded and converted_data %}
-                    <input type="submit" value="开始导入数据"/>
+                    <input type="button" onclick="Dajaxice.import.data(function(d){alert(d.message);}, {'data': $('#id_converted_data').val()})" value="开始导入数据"/>
                 {% else %}
                     <input type="submit" value="上传"/>
                 {% endif %}
@@ -26,30 +19,43 @@
         </tr>
     </table>
 </form>
-
-
+    </div>
 {% if uploaded and converted_data %}
+    <div class="span12">
     <h3>请检查上传的Excel表格是否正确:</h3>
-    <div class="results">
-        <table>
-            <tr>
-                {% with fields=converted_data.0.keys %}
-                    {% for field in fields %}
-                        <th>{{ field }}</th>
+    <ul class="nav nav-tabs" id="myTab">
+        {% for sheet in converted_data %}
+            <li class={% if forloop.first %}"active"{% endif %}><a href="#sheet{{forloop.counter}}">Sheet{{forloop.counter}}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content">
+        {% for sheet in converted_data %}
+            <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="sheet{{forloop.counter}}">
+                <table class="table table-striped">
+                    <tr>
+                        {% with fields=sheet.0.keys %}
+                            {% for field in fields %}
+                                <th>{{ field }}</th>
+                            {% endfor %}
+                        {% endwith %}
+                    </tr>
+                    {% for item_data in sheet %}
+                        <tr>
+                            {% for key, value in item_data.iteritems %}
+                                <td><div style="white-space: pre-wrap;">{{ value }}</div></td>
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                {% endwith %}
-            </tr>
-            {% for item_data in converted_data %}
-                <tr>
-                    {% for key, value in item_data.iteritems %}
-                        <td><div style="white-space: pre-wrap;">{{ value }}</div></td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
+                </table>
+            </div>
+        {% endfor %}
     </div>
 {% endif %}
-
-</BODY>
-
-</HTML>
+</div>
+<script>
+    $('#myTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+</script>
+{% endblock %}

@@ -35,14 +35,15 @@ class Base(Settings):
         'django.contrib.admin',
         'django.contrib.admindocs',
 #        'django.contrib.gis',
-
+        'dajaxice',
         'south',
         'django_extensions',
         'guardian',
         'userena',
+        'bootstrap_toolkit',
         'easy_thumbnails',
         'cityapp.apps.excel_handler',
-        'cityapp.apps.manager',
+        'cityapp.apps.city_viewer',
     )
     TIME_ZONE = 'Asia/Shanghai'
     LANGUAGE_CODE = 'zh-cn'
@@ -61,10 +62,28 @@ class Base(Settings):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',)
 
+    TEMPLATE_LOADERS = (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+        'django.template.loaders.eggs.Loader',
+    )
+
     TEMPLATE_CONTEXT_PROCESSORS =(
         'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
+        'django.core.context_processors.debug',
+        'django.core.context_processors.i18n',
+        'django.core.context_processors.media',
+        'django.core.context_processors.static',
+        'django.core.context_processors.request',
+        'django.contrib.messages.context_processors.messages'
     )
+
+    STATICFILES_FINDERS = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'dajaxice.finders.DajaxiceFinder',
+    )
+
     ROOT_URLCONF = 'cityapp.urls'
     SECRET_KEY = '@5ae)r=gfw20@+4x0^-wkdq&amp;jevw1lv6_%m!q(9cm5g5#%(x!2'
     SERVER_EMAIL = 'robot@tukeq.com'.format(DOMAIN)
@@ -79,7 +98,7 @@ class Base(Settings):
 
     # django-userena / django-guardian
     ANONYMOUS_USER_ID = -1
-    AUTH_PROFILE_MODULE = 'manager.UserProfile'
+    AUTH_PROFILE_MODULE = 'city_viewer.UserProfile'
     AUTHENTICATION_BACKENDS = (
         'userena.backends.UserenaAuthenticationBackend',
         'guardian.backends.ObjectPermissionBackend',

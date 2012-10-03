@@ -8,7 +8,7 @@ from userena.models import UserenaBaseProfile
 
 class UserProfile(UserenaBaseProfile):
     class Meta:
-        app_label = 'manager'
+        app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('作者资料')
 
     user = models.OneToOneField(User, unique=True, verbose_name=_('作者'))

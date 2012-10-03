@@ -3,12 +3,12 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import  ModificationDateTimeField, UUIDField
-from cityapp.apps.manager.models.topics import Topic
-from cityapp.apps.manager.models.areas import Area
+from cityapp.apps.city_viewer.models.topics import Topic
+from cityapp.apps.city_viewer.models.areas import Area
 
 class Place(models.Model):
     class Meta:
-        app_label = 'manager'
+        app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('地点')
 
     id = UUIDField(primary_key=True)

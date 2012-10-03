@@ -10,7 +10,6 @@ class ImportExcelForm(forms.Form):
 
     excel_file = forms.FileField(required=False)
     converted_data = forms.CharField(widget=forms.HiddenInput, required=False)
-    is_good = forms.BooleanField(widget=forms.HiddenInput, required=False, label=u'确定导入')
 
     def clean_converted_data(self):
         converted_data = self.cleaned_data['converted_data']
@@ -28,14 +27,10 @@ class ImportExcelForm(forms.Form):
             self.errors['excel_file'] = ErrorList([u'Required Field'])
         return cleaned_data
 
-    def get_converted_data(self, data):
-        if data['converted_data']:
-            return data['converted_data']
-        excel_file = data['excel_file']
-        book = xlrd.open_workbook(
-            file_contents=excel_file.read(), encoding_override='utf-8'
-        )
-        sheet = book.sheet_by_index(0)
+    def convert_to_dict(self, sheet):
+        """
+        The first row should be title of each filed
+        """
         first_row = sheet.row(0)
         fields = map(lambda cell: cell.value, first_row)
         converted_data = []
@@ -47,6 +42,18 @@ class ImportExcelForm(forms.Form):
             item_data = SortedDict(zip(fields, values))
             converted_data.append(item_data)
         return converted_data
+
+    def get_converted_data(self, data):
+
+        if data['converted_data']:
+            return data['converted_data']
+
+        excel_file = data['excel_file']
+        book = xlrd.open_workbook(
+            file_contents=excel_file.read(), encoding_override='utf-8'
+        )
+        return [self.convert_to_dict(sheet) for sheet in book.sheets()]
+
 
     def update_callback(self, request, converted_data):
         raise NotImplementedError

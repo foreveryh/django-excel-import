@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class Area(models.Model):
     class Meta:
-        app_label = 'manager'
+        app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('城市')
         permissions = (
             ('view_area', 'View Area'),
