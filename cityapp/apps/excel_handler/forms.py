@@ -57,3 +57,7 @@ class ImportExcelForm(forms.Form):
 
     def update_callback(self, request, converted_data):
         raise NotImplementedError
+
+
+class UploadPhotosForm(forms.Form):
+        photo_file = forms.FileField(required=True)

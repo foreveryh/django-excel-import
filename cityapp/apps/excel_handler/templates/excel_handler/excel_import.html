@@ -1,61 +1,77 @@
 {% extends "city_viewer/base.html" %}
 {% block content %}
 <div class="row-fluid">
-    <div class="span4">
+    <div class="span10">
         <h3>导入Excel</h3>
-<form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype #}>
-    {% csrf_token %}
-    <table>
-        {{ form }}
-        <tr>
-            <th/>
-            <td>
-                {% if uploaded and converted_data %}
-                    <input type="button" onclick="Dajaxice.import.data(function(d){alert(d.message);}, {'data': $('#id_converted_data').val()})" value="开始导入数据"/>
-                {% else %}
-                    <input type="submit" value="上传"/>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
-</form>
+        <form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype > #}>
+        {% csrf_token %}
+        <table>
+            {{ form }}
+            <tr>
+                <td>
+                    {% if uploaded and converted_data %}
+                        <input type="button" onclick="import_data()" value="开始导入数据"/>
+                    {% else %}
+                        <input type="submit" value="上传"/>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        </form>
     </div>
-{% if uploaded and converted_data %}
+    {% if uploaded and converted_data %}
     <div class="span12">
-    <h3>请检查上传的Excel表格是否正确:</h3>
-    <ul class="nav nav-tabs" id="myTab">
+        <h3>请检查上传的Excel表格是否正确:</h3>
+        <ul class="nav nav-tabs" id="myTab">
         {% for sheet in converted_data %}
             <li class={% if forloop.first %}"active"{% endif %}><a href="#sheet{{forloop.counter}}">Sheet{{forloop.counter}}</a></li>
         {% endfor %}
-    </ul>
-    <div class="tab-content">
-        {% for sheet in converted_data %}
-            <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="sheet{{forloop.counter}}">
-                <table class="table table-striped">
-                    <tr>
-                        {% with fields=sheet.0.keys %}
-                            {% for field in fields %}
-                                <th>{{ field }}</th>
-                            {% endfor %}
-                        {% endwith %}
-                    </tr>
-                    {% for item_data in sheet %}
+        </ul>
+        <div class="tab-content">
+            {% for sheet in converted_data %}
+                <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="sheet{{forloop.counter}}">
+                    <table class="table table-striped">
+                        <tr>
+                            {% with fields=sheet.0.keys %}
+                                {% for field in fields %}
+                                    <th>{{ field }}</th>
+                                 {% endfor %}
+                            {% endwith %}
+                        </tr>
+                        {% for item_data in sheet %}
                         <tr>
                             {% for key, value in item_data.iteritems %}
                                 <td><div style="white-space: pre-wrap;">{{ value }}</div></td>
                             {% endfor %}
                         </tr>
                     {% endfor %}
-                </table>
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
 <script>
+//Tab
     $('#myTab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
     })
+//Data import ajax
+    var import_data = function(e){
+        var city_name = $('#id_city_name').val().trim();
+        if(city_name==null || city_name=='')
+            alert('请输入城市名称');
+        else{
+            Dajaxice.import.data(
+            function(d){
+                var message = d.message != 'ok' ? d.message: "导入完成，请到后台查看。";
+                alert(message);
+            },{'city': city_name,
+               'data': $('#id_converted_data').val()
+            });
+
+        }
+    }
 </script>
 {% endblock %}

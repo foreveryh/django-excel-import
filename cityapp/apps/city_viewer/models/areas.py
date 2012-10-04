@@ -14,7 +14,7 @@ class Area(models.Model):
         permissions = (
             ('view_area', 'View Area'),
             )
-    name = models.CharField(_('名称'), max_length=50)
+    name = models.CharField(_('名称'), max_length=50, unique=True)
     owner = models.ForeignKey(User, verbose_name=_('负责人'))
     create_at = CreationDateTimeField()
 

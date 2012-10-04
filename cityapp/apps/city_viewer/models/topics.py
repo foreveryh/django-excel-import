@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import UUIDField
-from cityapp.apps.city_viewer.models.areas import Area
+from cityapp.apps.city_viewer.models import Area
 
 
 class Topic(models.Model):
