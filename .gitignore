@@ -1,4 +1,5 @@
 *.py[co]
+*.pyc
 
 #packages
 *.egg
@@ -14,8 +15,5 @@ admin/*
 .idea
 
 #database
-.sql
-
+*.sql
 *.DS_Store
-
-
