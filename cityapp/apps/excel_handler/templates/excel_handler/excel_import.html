@@ -29,7 +29,7 @@
         </ul>
         <div class="tab-content">
             {% for sheet in converted_data %}
-                <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="sheet{{forloop.counter}}">
+                <div class="tab-pane {% if forloop.first %}active{% endif %}" id="sheet{{forloop.counter}}">
                     <table class="table table-striped">
                         <tr>
                             {% with fields=sheet.0.keys %}

@@ -60,6 +60,3 @@ class ImportExcelForm(forms.Form):
     def update_callback(self, request, converted_data):
         raise NotImplementedError
 
-class UploadZipFileForm(forms.Form):
-    zip_file = forms.FileField(required=True, label=_('图片压缩文件'))
-

@@ -49,10 +49,7 @@ class Base(Settings):
     TIME_ZONE = 'Asia/Shanghai'
     LANGUAGE_CODE = 'zh-cn'
     MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
-
-    @property
-    def MEDIA_URL(self):
-        return 'city.tukeq.com/media/'.format(self.STATIC_URL)
+    MEDIA_URL = '/static/media/'
 
     MIDDLEWARE_CLASSES = (
         'django.middleware.common.CommonMiddleware',
@@ -109,6 +106,8 @@ class Base(Settings):
     LOGIN_URL = '/accounts/signin/'
     LOGOUT_URL = '/accounts/signout/'
     USERENA_LANGUAGE_FIELD = 'zh_CN'
+
+    FILEBROWSER_MAX_UPLOAD_SIZE = 52428800
 
 
 class LocalDev(Base):

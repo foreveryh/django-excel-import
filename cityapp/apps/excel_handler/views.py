@@ -1,17 +1,12 @@
 #coding:utf-8
 from django import forms
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.forms.util import ErrorList
-from django.shortcuts import redirect
 from django.utils import simplejson
-from django.utils.datastructures import MergeDict
-from django.views.generic.simple import direct_to_template
-from django.views.generic import FormView, CreateView
+from django.views.generic import FormView, TemplateView, CreateView
 from cityapp.apps.excel_handler.forms import ImportExcelForm
 from cityapp.apps.city_viewer.models import  Area, Place, Topic
-from cityapp.apps.excel_handler.models import UploadZipFile
 from dajaxice.decorators import dajaxice_register
+
 
 class ImportError(Exception):
     """
@@ -134,11 +129,3 @@ def handle_place_data(item):
     item.pop('topic')
     item.pop('slug')
     return item
-
-#################################################################
-# uplaod zipped pics
-
-class UploadZipFile(CreateView):
-    model = UploadZipFile
-    template_name = 'excel_handler/file_import.html'
-    success_url = '/'
