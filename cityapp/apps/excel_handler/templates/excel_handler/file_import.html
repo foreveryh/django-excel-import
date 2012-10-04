@@ -1,0 +1,17 @@
+{% extends "city_viewer/base.html" %}
+{% block content %}
+    <div class="span10">
+        <h3>上传照片压缩文件</h3>
+        <form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype > #}>
+            {% csrf_token %}
+            <table>
+                {{ form }}
+                <tr>
+                    <td>
+                    <input type="submit" value="上传"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+{% endblock %}

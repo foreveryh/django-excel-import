@@ -1,4 +1,6 @@
 #coding:utf-8
+from __future__ import unicode_literals
+from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.forms.util import ErrorList
 from django.utils import simplejson
@@ -8,7 +10,7 @@ import xlrd
 
 class ImportExcelForm(forms.Form):
 
-    excel_file = forms.FileField(required=False)
+    excel_file = forms.FileField(required=False,label=_('Excel文件'))
     converted_data = forms.CharField(widget=forms.HiddenInput, required=False)
 
     def clean_converted_data(self):
@@ -58,6 +60,6 @@ class ImportExcelForm(forms.Form):
     def update_callback(self, request, converted_data):
         raise NotImplementedError
 
+class UploadZipFileForm(forms.Form):
+    zip_file = forms.FileField(required=True, label=_('图片压缩文件'))
 
-class UploadPhotosForm(forms.Form):
-        photo_file = forms.FileField(required=True)

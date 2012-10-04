@@ -4,7 +4,7 @@ import os
 from configurations import Settings
 
 
-PROJECT_ROOT = os.path.dirname(inspect.getfile(inspect.currentframe()))
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 DOMAIN = 'cityapp.local'
 
 
@@ -42,6 +42,7 @@ class Base(Settings):
         'userena',
         'bootstrap_toolkit',
         'easy_thumbnails',
+        'filebrowser',
         'cityapp.apps.excel_handler',
         'cityapp.apps.city_viewer',
     )

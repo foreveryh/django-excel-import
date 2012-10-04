@@ -7,14 +7,23 @@ from django.shortcuts import redirect
 from django.utils import simplejson
 from django.utils.datastructures import MergeDict
 from django.views.generic.simple import direct_to_template
-from django.views.generic import FormView
+from django.views.generic import FormView, CreateView
 from cityapp.apps.excel_handler.forms import ImportExcelForm
 from cityapp.apps.city_viewer.models import  Area, Place, Topic
-import datetime
+from cityapp.apps.excel_handler.models import UploadZipFile
 from dajaxice.decorators import dajaxice_register
+
+class ImportError(Exception):
+    """
+    Exception thrown when imported data format is illegal
+    """
+    pass
 
 
 class ImportExcel(FormView):
+    """
+    upload excel file and display it in browser
+    """
     template_name = 'excel_handler/excel_import.html'
     form_class = ImportExcelForm
     success_url = ''
@@ -35,12 +44,8 @@ class ImportExcel(FormView):
             return super(ImportExcel, self).render_to_response(self.extra_context)
 
 
-class ImportError(Exception):
-    """
-    Exception thrown when imported data format is illegal
-    """
-    pass
-
+#####################################################################
+#    verify and import excel data to database by an ajax request    #
 
 @dajaxice_register(method='POST', name="import.data")
 def check_area(request, city, data):
@@ -129,3 +134,11 @@ def handle_place_data(item):
     item.pop('topic')
     item.pop('slug')
     return item
+
+#################################################################
+# uplaod zipped pics
+
+class UploadZipFile(CreateView):
+    model = UploadZipFile
+    template_name = 'excel_handler/file_import.html'
+    success_url = '/'
