@@ -14,11 +14,12 @@ class Area(models.Model):
         permissions = (
             ('view_area', 'View Area'),
             )
-    name = models.CharField(_('名称'), max_length=50, unique=True)
+    zh_name = models.CharField(_('中文名'), max_length=50, unique=True)
+    en_name = models.CharField(_('英文名'), max_length=50, unique=True, blank=True)
     owner = models.ForeignKey(User, verbose_name=_('负责人'))
     create_at = CreationDateTimeField()
 
     def __unicode__(self):
-        return self.name
+        return self.zh_name
 
 

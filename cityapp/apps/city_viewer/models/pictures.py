@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import UUIDField
 from cityapp.apps.city_viewer.models import Place
 from django_extensions.db.fields import CreationDateTimeField
-
+from django.conf import settings
 class Picture(models.Model):
     class Meta:
         app_label = 'city_viewer'
@@ -20,3 +20,4 @@ class Picture(models.Model):
 
     def __unicode__(self):
         return self.file_name
+

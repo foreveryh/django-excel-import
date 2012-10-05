@@ -1,9 +1,104 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends "city_viewer/base.html" %}
+{% block body_attr %}
+    data-spy="scroll" data-target=".viewer-sidebar"
+{% endblock %}"
+{% block scripts %}
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyC5VsjTZ0LmpmcxSpZF0MnB4PpaBE2CyEg&sensor=true">
+    </script>
+{% endblock %}
 
-</body>
-</html>
+{% block ready%}
+    var pos = new google.maps.LatLng(0, 0);
+    var map_options = {
+        center: pos,
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map_canvas"), map_options);
+    var marker = new google.maps.Marker({
+        position: pos,
+        map: map});
+    $(".place").bind("remark", function(){
+        var lat = $(this).attr("lat");
+        var lng = $(this).attr("lng");
+        var pos = new google.maps.LatLng(lat, lng);
+        if(!pos.equals(marker.getPosition())){
+            console.log("remark");
+            marker.setPosition(pos);
+            map.setCenter(pos);
+        }
+    });
+{% endblock %}
+{% block script %}
+    $('.nav').affix();
+    $('.carousel').carousel({interval: 0});
+    $(document).scroll(function() {
+        var cutoff = $(window).scrollTop();
+        var cutoffRange = cutoff + 200;
+        $(".place").each(function() {
+            if ($(this).offset().top > cutoff && $(this).offset().top < cutoffRange) {
+                $('.place').removeClass("top");
+                $(this).addClass("top");
+                $(this).trigger("remark");
+                return false; // stops the iteration after the first one on screen
+            }
+        });
+    });
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="span3 viewer-sidebar">
+            <ul class="nav nav-list viewer-sidenav affix-top">
+                {% for t in topics %}
+                    <li class="">
+                        <a href="#{{ t.pk }}">
+                            {{ t.name }}
+                            <i class="icon-chevron-right">
+                            </i>
+                        </a>
+                    </li>
+                {% endfor %}
+                <div id="map_canvas" style="width:228px; height:200px"></div>
+            </ul>
+        </div>
+        <div class="span9">
+            {% for t in topics %}
+            <section id="{{ t.pk }}">
+                <div class="page-header">
+                    <h1>{{t.name}}<br/><small>{{ t.desc }}</small></h1>
+                </div>
+                {% for place in t.place_set.all %}
+                <div class="place" lat="{{ place.latitude }}" lng="{{ place.longitude }}">
+                    <h2>{{ place.zh_name }} <small>{{ place.en_name }}</small></h2>
+                    <div id="{{ place.pk }}" class="carousel slide">
+                        <div class="carousel-inner">
+                            {% for pic in place.picture_set.all %}
+                                <div class="item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ pic.url }}" alt="">
+                                    <div class="carousel-caption">
+                                        <h4>{{ place.zh_name }}</h4>
+                                        <p>{{ place.short_desc }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a class="left carousel-control" href="#{{ place.pk }}" data-slide="prev">‹</a>
+                        <a class="right carousel-control" href="#{{ place.pk }}" data-slide="next">›</a>
+                    </div>
+                    <p>{{ place.full_desc }}</p>
+                    <p><i class="icon-map-marker"></i> {{ place.address }}</p>
+                    <p><i class="icon-time"></i> {{ place.open_time }}</p>
+                    <p><i class="icon-road"></i> {{ place.traffic }}</p>
+                    <p><i class="icon-hand-right"></i> {{ place.website }}</p>
+                    <p><i class="icon-th"></i> {{ place.tel }}</p>
+                    <p><i class="icon-glass"></i> {{ place.price }}</p>
+                    <p><i class="icon-heart"></i> {{ place.tips }}</p>
+                </div>
+                {% endfor %}
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

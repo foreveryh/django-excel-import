@@ -15,6 +15,10 @@ class PlaceAdmin(GuardedModelAdmin):
 class TopicAdmin(GuardedModelAdmin):
     pass
 
+class PictureAdmin(GuardedModelAdmin):
+    pass
+
 admin.site.register(Area, AreaAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Topic, TopicAdmin)
+admin.site.register(Picture, PictureAdmin)

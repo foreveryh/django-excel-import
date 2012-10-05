@@ -1,12 +1,14 @@
 #coding:utf-8
+import os
 from django import forms
 from django.forms.util import ErrorList
 from django.utils import simplejson
 from django.views.generic import FormView, TemplateView, CreateView
+from django.conf import settings
 from cityapp.apps.excel_handler.forms import ImportExcelForm
-from cityapp.apps.city_viewer.models import  Area, Place, Topic
+from cityapp.apps.city_viewer.models import  Area, Place, Topic, Picture
 from dajaxice.decorators import dajaxice_register
-
+from filebrowser.sites import site
 
 class ImportError(Exception):
     """
@@ -34,7 +36,9 @@ class ImportExcel(FormView):
             initial =  {'converted_data': simplejson.dumps(converted_data) }
             form = self.get_form_class()(initial=initial)
             form.fields['excel_file'].widget = forms.HiddenInput()
-            form.fields['city_name'] = forms.CharField(required=True, label=u'输入城市中文名称')
+            form.fields['zh_name'] = forms.CharField(required=True, label=u'输入城市中文名称')
+            form.fields['en_name'] = forms.CharField(required=True, label=u'输入图片的文件夹名称（英文名）')
+            form.fields['file_type'] =  forms.ChoiceField(choices = ([('zh',u'中文名_1.jpg'), ('en',u'英文名_1.jpg')]), required = True, label=u'上传图片名格式')
             self.extra_context.update({'form': form , 'uploaded': True, 'converted_data': converted_data})
             return super(ImportExcel, self).render_to_response(self.extra_context)
 
@@ -45,21 +49,27 @@ class ImportExcel(FormView):
 @dajaxice_register(method='POST', name="import.data")
 def check_area(request, city, data):
     message = {'message': None}
-    user = request.user
     data =  simplejson.loads(data)
-
+    city = simplejson.loads(city)
+    print city['type']
+    #检测图片文件夹是否存在
+    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', city['en_name'])
+    if not site.storage.isdir(area_dir_path):
+        message['message']=u'图片文件夹不存在'
+        return simplejson.dumps(message)
     try:
-        area = Area.objects.get(name=city)
+        area = Area.objects.get(zh_name=city['zh_name'])
     except Area.DoesNotExist:
         #新建城市
-        area = Area(name=city, owner=user)
+        user = request.user
+        area = Area(zh_name=city['zh_name'], en_name=city['en_name'], owner=user)
         area.save()
-        message['message'] = import_data(area, data)
+        message['message'] = import_data(area, data, city['type'])
     else:
         message['message'] = u'城市已经存在'
     return simplejson.dumps(message)
 
-def import_data(area, data):
+def import_data(area, data, type):
     """
     Import data to database
     """
@@ -99,6 +109,8 @@ def import_data(area, data):
                 for topic in ttopics:
                     if t == topic.name:
                         place.in_topics.add(topic)
+            #导入照片
+            link_local_pics(area, place, type)
     return msg
 
 
@@ -129,3 +141,27 @@ def handle_place_data(item):
     item.pop('topic')
     item.pop('slug')
     return item
+
+
+def link_local_pics(area, place, pics_name_type):
+
+    #首先通过英文名称查找
+    findit = True
+    count = 0
+    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', area.en_name)
+    print area_dir_path
+    while findit:
+        count += 1
+        if pics_name_type == 'en':
+            file_name = place.en_name + '_%d' % count + '.jpg'
+        elif pics_name_type == 'zh':
+            file_name = place.zh_name + '_%d' % count + '.jpg'
+        print file_name
+        full_path = area_dir_path + '/' + file_name
+        print full_path
+        findit = site.storage.isfile(full_path)
+        if findit:
+            url = settings.MEDIA_URL + 'uploads/' + area.en_name + '/' + file_name
+            pic = Picture(in_place=place, file_name = file_name, url = url)
+            pic.save()
+    return count - 1

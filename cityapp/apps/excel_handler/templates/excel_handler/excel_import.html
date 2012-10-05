@@ -1,6 +1,6 @@
 {% extends "city_viewer/base.html" %}
 {% block content %}
-<div class="row-fluid">
+<div class="row">
     <div class="span10">
         <h3>导入Excel</h3>
         <form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype > #}>
@@ -59,15 +59,22 @@
     })
 //Data import ajax
     var import_data = function(e){
-        var city_name = $('#id_city_name').val().trim();
-        if(city_name==null || city_name=='')
-            alert('请输入城市名称');
+        var en_reg = /^[a-z-]+$/g;
+        var zh_name = $('#id_zh_name').val().trim();
+        var en_name = $('#id_en_name').val().trim();
+        var file_type = $('#id_file_type').val();
+        if(zh_name==null || zh_name=='')
+            alert('请输入城市中文名称');
+        else if(en_name==null || en_name=='')
+            alert('请输入导入城市图片时新建的文件夹名');
+        else if(!en_reg.test(en_name))
+            alert('英文名称只能是字母和中横线的组合');
         else{
             Dajaxice.import.data(
             function(d){
                 var message = d.message != 'ok' ? d.message: "导入完成，请到后台查看。";
                 alert(message);
-            },{'city': city_name,
+            },{'city': JSON.stringify({'zh_name': zh_name, 'en_name': en_name, 'type': file_type}),
                'data': $('#id_converted_data').val()
             });
 

@@ -2,7 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from cityapp.apps.excel_handler.views import ImportExcel, UploadZipFile
+from cityapp.apps.excel_handler.views import ImportExcel
+from cityapp.apps.city_viewer.views import CityViewer
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from filebrowser.sites import site
 
@@ -17,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^admin/pics/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^import/excel/', login_required(ImportExcel.as_view())),
+    url(r'^',CityViewer.as_view()),
 ) + staticfiles_urlpatterns()
