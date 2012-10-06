@@ -16,6 +16,7 @@ class Area(models.Model):
             )
     zh_name = models.CharField(_('中文名'), max_length=50, unique=True)
     en_name = models.CharField(_('英文名'), max_length=50, unique=True, blank=True)
+    cover_pic = models.ImageField(_('封面'), upload_to='uploads')
     owner = models.ForeignKey(User, verbose_name=_('负责人'))
     create_at = CreationDateTimeField()
 

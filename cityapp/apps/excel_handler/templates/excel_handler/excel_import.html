@@ -49,9 +49,12 @@
                 </div>
             {% endfor %}
         </div>
+     </div>
     {% endif %}
 </div>
-<script>
+{% endblock %}
+
+{% block script %}
 //Tab
     $('#myTab a').click(function (e) {
         e.preventDefault();
@@ -80,5 +83,4 @@
 
         }
     }
-</script>
 {% endblock %}
