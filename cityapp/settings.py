@@ -87,7 +87,10 @@ class Base(Settings):
     SERVER_EMAIL = 'robot@tukeq.com'.format(DOMAIN)
     SITE_ID = 1
     SETTINGS_MODULE = 'cityapp.settings'
-    STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'), )
+    STATICFILES_DIRS = (
+        os.path.join(PROJECT_ROOT, 'static'),
+    )
+    #STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
     STATIC_URL = '/static/'
     TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
     USE_L10N = True

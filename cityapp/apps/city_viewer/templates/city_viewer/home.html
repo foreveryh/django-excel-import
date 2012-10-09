@@ -1,12 +1,14 @@
 {% extends "city_viewer/base.html" %}
 {% block content %}
     <div class="row">
-    {% for city in cities %}
-        <div class="span3">
-            <a href="{% url city_viewer city.en_name %}">
-                <img src="{{ city.cover_pic.url }}" alt="{{ city.zh_name }}"/>
-            </a>
-        </div>
-    {% endfor %}
+        <ul class="polaroids">
+        {% for city in cities %}
+            <li>
+                <a href="{% url city_viewer city.en_name %}" title="{{ city.zh_name }}">
+                    <img src="{{ city.cover_pic.url }}" alt="{{ city.zh_name }}"/>
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
     </div>
 {% endblock %}

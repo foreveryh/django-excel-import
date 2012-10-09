@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.views.generic import ListView
 from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture
+
 
 class HomeView(ListView):
     context_object_name = 'cities'
@@ -21,3 +23,4 @@ class CityViewerView(ListView):
         city_name = kwargs['city']
         self.queryset = Topic.objects.filter(in_area__en_name=city_name)
         return super(CityViewerView, self).get(request, *args, **kwargs)
+
