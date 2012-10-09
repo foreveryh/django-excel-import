@@ -88,7 +88,7 @@ class Base(Settings):
     SITE_ID = 1
     SETTINGS_MODULE = 'cityapp.settings'
     STATICFILES_DIRS = (
-        #os.path.join(PROJECT_ROOT, 'static'),
+        os.path.join(PROJECT_ROOT, 'cityapp', 'static'),
     )
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
     STATIC_URL = '/static/'
