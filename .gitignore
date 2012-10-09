@@ -6,14 +6,14 @@
 *.egg-info
 
 #django static
-cityapp/static/*
-cityapp/media/*
-grappelli/*
-admin/*
+#cityapp/static/*
+#cityapp/media/*
+#grappelli/*
+#admin/*
 
 #pycharm
 .idea
 
 #database
-*.sql
+*.db
 *.DS_Store

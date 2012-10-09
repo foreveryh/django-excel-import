@@ -1,0 +1,91 @@
+/* Sidenav for Docs
+-------------------------------------------------- */
+
+.viewer-sidenav {
+    width: 228px;
+    margin: 30px 0 0;
+    padding: 0;
+    background-color: #fff;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+    -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+    box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+.viewer-sidenav > li > a {
+    display: block;
+    *width: 190px;
+    margin: 0 0 -1px;
+    padding: 8px 14px;
+    border: 1px solid #e5e5e5;
+}
+.viewer-sidenav > li:first-child > a {
+    -webkit-border-radius: 6px 6px 0 0;
+    -moz-border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
+}
+.viewer-sidenav > li:last-child > a {
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+}
+.viewer-sidenav > .active > a {
+    position: relative;
+    z-index: 2;
+    padding: 9px 15px;
+    border: 0;
+    text-shadow: 0 1px 0 rgba(0,0,0,.15);
+    -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+    -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+    box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}
+/* Chevrons */
+.viewer-sidenav .icon-chevron-right {
+    float: right;
+    margin-top: 2px;
+    margin-right: -6px;
+    opacity: .25;
+}
+.viewer-sidenav > li > a:hover {
+    background-color: #f5f5f5;
+}
+.viewer-sidenav a:hover .icon-chevron-right {
+    opacity: .5;
+}
+.viewer-sidenav .active .icon-chevron-right,
+.viewer-sidenav .active a:hover .icon-chevron-right {
+    background-image: url('');
+    opacity: 1;
+}
+.viewer-sidenav.affix {
+    top: 40px;
+}
+.viewer-sidenav.affix-bottom {
+    position: absolute;
+    top: auto;
+    bottom: 270px;
+}​
+
+/*Homepage
+----------------------------------------------------
+*/
+pre { background: #f5f5f5; margin: 0 0 18px; padding: 13px 18px 14px; -webkit-border-radius: 3px; -moz-border-radius: 3px; text-shadow: 0 1px 1px #fff; font-size: 11px; line-height: 16px; }
+
+/* -------------------------------------------------- */
+
+ul.polaroids { width: 970px; margin: 0 0 18px -30px; }
+ul.polaroids li { display: inline; }
+ul.polaroids a { background: #fff; display: inline; float: left; margin: 0 0 27px 30px; width: auto; padding: 10px 10px 15px; text-align: center; font-family: "Marker Felt", sans-serif; text-decoration: none; color: #333; font-size: 18px; -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.25); -moz-box-shadow: 0 3px 6px rgba(0,0,0,.25); -webkit-transform: rotate(-2deg); -webkit-transition: -webkit-transform .15s linear; -moz-transform: rotate(-2deg); }
+ul.polaroids img { display: block; width: 190px; margin-bottom: 12px; }
+ul.polaroids a:after { content: attr(title); }
+
+ul.polaroids li:nth-child(even) a { -webkit-transform: rotate(2deg);  -moz-transform: rotate(2deg); }
+ul.polaroids li:nth-child(3n) a { -webkit-transform: none; position: relative; top: -5px;  -moz-transform: none; }
+ul.polaroids li:nth-child(5n) a { -webkit-transform: rotate(5deg); position: relative; right: 5px;  -moz-transform: rotate(5deg); }
+ul.polaroids li:nth-child(8n) a { position: relative; right: 5px; top: 8px; }
+ul.polaroids li:nth-child(11n) a { position: relative; left: -5px; top: 3px; }
+
+ul.polaroids li.messy a { margin-top: -375px; margin-left: 160px; -webkit-transform: rotate(-5deg); -moz-transform: rotate(-5deg); }
+
+ul.polaroids li a:hover { -webkit-transform: scale(1.25); -moz-transform: scale(1.25); -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.5); -moz-box-shadow: 0 3px 6px rgba(0,0,0,.5); position: relative; z-index: 5; }
