@@ -9,6 +9,8 @@ from cityapp.apps.excel_handler.forms import ImportExcelForm
 from cityapp.apps.city_viewer.models import  Area, Place, Topic, Picture
 from dajaxice.decorators import dajaxice_register
 from filebrowser.sites import site
+from unidecode import unidecode
+from cityapp.utils import convert_name
 
 class ImportError(Exception):
     """
@@ -145,21 +147,18 @@ def handle_place_data(item):
     item.pop('slug')
     return item
 
-
 def link_local_pics(area, place, pics_name_type):
 
     #首先通过英文名称查找
     findit = True
     count = 0
     area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', area.en_name)
-    print area_dir_path
     while findit:
         count += 1
         if pics_name_type == 'en':
-            file_name = place.en_name + '_%d' % count + '.jpg'
+            file_name = convert_name(place.en_name) + '_%d' % count + '.jpg'
         elif pics_name_type == 'zh':
-            file_name = place.zh_name + '_%d' % count + '.jpg'
-        print file_name
+            file_name = convert_name(place.zh_name) + '_%d' % count + '.jpg'
         full_path = area_dir_path + '/' + file_name
         print full_path
         findit = site.storage.isfile(full_path)

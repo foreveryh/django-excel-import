@@ -10,6 +10,7 @@
 #cityapp/media/*
 #grappelli/*
 #admin/*
+.static
 
 #pycharm
 .idea

@@ -110,6 +110,8 @@ class Base(Settings):
     LOGOUT_URL = '/accounts/signout/'
     USERENA_LANGUAGE_FIELD = 'zh_CN'
 
+    DEFAULT_FILE_STORAGE = 'cityapp.utils.ASCIIFileSystemStorage'
+    FILEBROWSER_DIRECTORY = 'uploads/'
     FILEBROWSER_MAX_UPLOAD_SIZE = 52428800
 
 
