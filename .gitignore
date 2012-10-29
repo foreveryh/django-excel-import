@@ -8,8 +8,7 @@
 #django static
 #cityapp/static/*
 #cityapp/media/*
-#grappelli/*
-#admin/*
+static/*
 .static
 
 #pycharm
