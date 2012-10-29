@@ -5,7 +5,7 @@
         {% for city in cities %}
             <li>
                 <a href="{% url city_viewer city.en_name %}" title="{{ city.zh_name }}">
-                    <img src="{{ city.cover_pic.url }}" alt="{{ city.zh_name }}"/>
+                    <img src="{%if city.cover_pic %} {{ city.cover_pic.url }}{% endif %}" alt="{{ city.zh_name }}"/>
                 </a>
             </li>
         {% endfor %}

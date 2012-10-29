@@ -1,9 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "city_viewer/base.html" %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-progress-bubbles.js">
+    </script>
+{% endblock %}
+{% block ready%}
+    var count = 0;
+    var hrefs = ['/admin/pics/browse/', '/import/excel/', '/', '/admin/'];
+    var warnings = [
+        "<li>Excel表格，请注意填写带国家号码的完整号码；网址前不需要http://；</li>"+
+        "<li>Excel上传完毕后，需选择图片所在文件夹和图片的命名规则；</li>"+
+        "<li>因为要生成不同格式的图片，数据导入时间可能略长。</li>"+
+        "<li>导入完成后会提示数据导入成功；</li>"+
+        "<li>若要重新导入Excel表格，请到后台找到【城市】后，删除相关城市。</li>",
+        "<li>数据导入完成后可以在前台浏览或者在后台进行编辑修正。</li>"+
+        "<li>可以在<a href='/'>首页</a>找到城市入口</li>",
+        "<li>最后一步留给开发来做吧，你做的已经很好！</li>",
+        "<li>记得，要想重新导入数据的话，先要删除原来的城市数据。</li>"];
+    $('#bubbles').progressBubbles( {
+    bubbles : [
+        {'title' : '准备导入'},
+        {'title' : '上传图片'},
+        {'title' : '导入数据'},
+        {'title' : '检查数据'},
+        {'title' : '导出数据库!'},
+        ]
+    });
+    $('#bubbles').progressBubbles('progress');
+    $('#bubbles').progressBubbles('regress');
+    $('#progress').on('click', function(event){
+        $('#bubbles').progressBubbles('progress');
+        window.open(hrefs[count],'mywin','left=20,top=20,width=1024,height=768,toolbar=1,resizable=0');
+        $('.alert ul').html(warnings[count]);
+        count ++;
+    });
+    $('#regress').on('click', function(event){
+        $('#bubbles').progressBubbles('regress');
+        count --;
+        $('.alert ul').html(warnings[count]);
+    });
+{% endblock %}
+{% block content %}
+    <div class="alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>下一步提示:</strong>
+        <ul>
+            <li>以城市中文名或者英文名命名的图片，多张图片以下划线和数字连接。(Eg. 巴黎圣母院_1.jpg)</li>
+            <li>上传图片的时候，请先【创建文件夹】，命名为城市的英文名称。进入文件夹后，多选上传。</li>
+            <li>明白了就点击下一步吧！</li>
+        </ul>
+    </div>
+    <div id="bubbles" class="progress-bubbles"></div>
+    <p>
+        <button id="regress" class="btn btn-primary">上一步</button>
+        <button id="progress" class="btn btn-primary">下一步</button>
+    </p>
+{% endblock %}

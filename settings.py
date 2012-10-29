@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import inspect
 import os
 
@@ -43,6 +44,7 @@ class Base(Settings):
         'bootstrap_toolkit',
         'easy_thumbnails',
         'filebrowser',
+        'tinymce',
         'cityapp.apps.excel_handler',
         'cityapp.apps.city_viewer',
     )
@@ -109,11 +111,31 @@ class Base(Settings):
     LOGIN_URL = '/accounts/signin/'
     LOGOUT_URL = '/accounts/signout/'
     USERENA_LANGUAGE_FIELD = 'zh_CN'
+    USERENA_ACTIVATION_REQUIRED = False
 
     DEFAULT_FILE_STORAGE = 'cityapp.utils.ASCIIFileSystemStorage'
     FILEBROWSER_DIRECTORY = 'uploads/'
     FILEBROWSER_MAX_UPLOAD_SIZE = 52428800
+    FILEBROWSER_VERSIONS = {
+        'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
+        'thumbnail': {'verbose_name': u'我的收藏', 'width': 144, 'height': 150, 'opts': 'crop'},
+        'small': {'verbose_name': u'相关景点', 'width': 290, 'height': 184, 'opts': 'crop'},
+        'medium': {'verbose_name': u'精彩主题', 'width': 600, 'height': 200, 'opts': 'crop'},
+        'big': {'verbose_name': u'景点大图', 'width': 640, 'height': 480, 'opts': 'crop'},
+        'large': {'verbose_name': u'大图', 'width': 640, 'height': '', 'opts': ''},
+        }
 
+    TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
+    TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")
+    TINYMCE_DEFAULT_CONFIG = {
+        'plugins': "table,spellchecker,paste,searchreplace",
+        'theme': "advanced",
+        'cleanup_on_startup': True,
+        'custom_undo_redo_levels': 10,
+        'relative_urls': False,
+    }
+
+    GRAPPELLI_ADMIN_TITLE = 'City App Manager'
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES

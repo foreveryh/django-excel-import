@@ -2,7 +2,7 @@ Django==1.4
 PIL==1.1.7
 South==0.7.6
 django-bootstrap-toolkit==2.5.8
-django-configurations==0.2
+https://github.com/jezdez/django-configurations/tarball/master
 django-dajaxice==0.5.2
 django-extensions==0.9
 django-filebrowser==3.5.0

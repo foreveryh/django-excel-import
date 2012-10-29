@@ -9,7 +9,7 @@
     {% block profile_navigation %}
       {% comment %}Dirty hack. Will use django-guardian in the future.{% endcomment %}
       {% if user.username == profile.user.username %}
-        <ul id="box-nav">
+        <ul class="nav nav-tabs">
           {% block profile_navigation_items %}
             <li><a href='{% url userena_profile_detail user.username %}'>{% trans "View profile" %}</a></li>
             <li><a href='{% url userena_profile_edit user.username %}'>{% trans "Edit details" %}</a></li>

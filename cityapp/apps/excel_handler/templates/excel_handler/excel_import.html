@@ -1,7 +1,7 @@
 {% extends "city_viewer/base.html" %}
 {% block content %}
 <div class="row">
-    <div class="span10">
+    <div class="span10 alert alert-block">
         <h3>导入Excel</h3>
         <form action="" method="POST" enctype="multipart/form-data"{# <-Required enctype > #}>
         {% csrf_token %}
@@ -10,7 +10,7 @@
             <tr>
                 <td>
                     {% if uploaded and converted_data %}
-                        <input type="button" onclick="import_data()" value="开始导入数据"/>
+                        <input class="btn" type="button" onclick="import_data()" value="开始导入数据"/>
                     {% else %}
                         <input type="submit" value="上传"/>
                     {% endif %}
@@ -18,6 +18,7 @@
             </tr>
         </table>
         </form>
+        <div id="loading"></div>
     </div>
     {% if uploaded and converted_data %}
     <div class="span12">
@@ -30,7 +31,7 @@
         <div class="tab-content">
             {% for sheet in converted_data %}
                 <div class="tab-pane {% if forloop.first %}active{% endif %}" id="sheet{{forloop.counter}}">
-                    <table class="table table-striped">
+                    <table class="table">
                         <tr>
                             {% with fields=sheet.0.keys %}
                                 {% for field in fields %}
@@ -62,6 +63,7 @@
     })
 //Data import ajax
     var import_data = function(e){
+        $(".alert").alert();
         var en_reg = /^[a-z-]+$/g;
         var zh_name = $('#id_zh_name').val().trim();
         var en_name = $('#id_en_name').val().trim();
@@ -73,9 +75,12 @@
         else if(!en_reg.test(en_name))
             alert('英文名称只能是字母和中横线的组合');
         else{
+            var loading = $("#loading");
+            loading.html('<div class="circle"></div><div class="circle1"></div>');
             Dajaxice.import.data(
             function(d){
                 var message = d.message != 'ok' ? d.message: "导入完成，请到后台查看。";
+                loading.html('');
                 alert(message);
             },{'city': JSON.stringify({'zh_name': zh_name, 'en_name': en_name, 'type': file_type}),
                'data': $('#id_converted_data').val()

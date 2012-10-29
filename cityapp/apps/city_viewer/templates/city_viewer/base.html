@@ -7,7 +7,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
-    <title>{% block title %}Django Template Boilerplate{% endblock %}</title>
+    <title>{% block title %}TukeQ城市APP管理系统{% endblock %}</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +30,7 @@
     </style>
     <!-- html5shiv -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6/html5shiv.min.js"></script>
+    <script type = “text/javascript” src="/static/js/tiny_mce/tiny_mce.js"></script>
     <!-- Allow templates to add additional stuff here -->
     {% block head %}{% endblock %}
 </head>
@@ -38,7 +39,7 @@
        chromium.org/developers/how-tos/chrome-frame-getting-started -->
 <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
     <header class={% block header_class %}"navbar navbar-fixed-top"{% endblock %}>
-
+        {% include "city_viewer/navigation.html" %}
     </header>
     {% block container %}
         <div class="container">
@@ -59,6 +60,7 @@
     {% bootstrap_javascript_tag "affix" %}
     {% bootstrap_javascript_tag "carousel" %}
     {% bootstrap_javascript_tag "modal" %}
+    {% bootstrap_javascript_tag "alert" %}
 
     {% block scripts %}
     {% endblock %}

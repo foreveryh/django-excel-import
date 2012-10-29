@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Hey,我是{{ author.name }}</title>
+    <meta http-equiv="imagetoolbar" content="false">
+    <style>
+        * { padding:0; margin:0; }
+        body {
+            color:#333;
+            font-family:Helvetica,arial,sans-serif;
+        }
+        p {
+            font-size:12px;
+            line-height:20px;
+            margin-bottom:1em;
+            -webkit-font-smoothing:antialiased;
+        }
+        h1 {
+            font-size:28px;
+            font-weight:normal;
+            letter-spacing:-1px;
+            -webkit-font-smoothing:antialiased;
+        }
+        ul {
+            font-size:14px;
+            line-height:20px;
+            list-style:square;
+            margin:0 0 22px 1em;
+            padding:0;
+            text-indent:0;
+            -webkit-font-smoothing:antialiased;
+        }
+        a { color: #fff; font-weight: bold; text-decoration: none; border-bottom:0; }
+        a:hover { color: #990000; border:0; }
+
+        #logo { width: 50px; padding: 50px 0 0 0; margin: 0 auto 0 50px; }
+        #about {
+            background:rgba(255,255,255,.5);
+            -webkit-border-top-left-radius:5px;
+            -webkit-border-bottom-left-radius:5px;
+            -moz-border-radius-topleft:5px;
+            -moz-border-radius-bottomleft:5px;
+            border-top-left-radius:5px;
+            border-bottom-left-radius:5px;
+            padding:20px;
+            position:absolute;
+            bottom:40px; right:0;
+            width:360px;
+        }
+
+        div.social { margin:0 0 15px; overflow:auto; }
+    </style>
+
+</head>
+<body>
+<!-- swap out for a logo -->
+<div id="logo">
+    <img src="">
+</div>
+<!-- swap out for information about yourself -->
+<div id="about">
+    <div id="content">
+
+        <h1>Hey, 我是 <strong>{{ author.name }}</strong>.</h1>
+
+        <p>{{ author.philosophy }}</p>
+
+        <div class="social">
+            {% if author.weibo_url %}
+                <a href="{{ author.weibo_url }}" title="{{ author.name }}的微博"><img src="{{ STATIC_URL }}/css/images/weibo.png"></a>
+            {% endif %}
+            {% if author.douban_url %}
+                <a href="{{ author.douban_url }}" title="{{ author.name }}的豆瓣"><img src="{{ STATIC_URL }}/css/douban.png"></a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!--include jquery & backstretch-->
+<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.backstretch.min.js"></script>
+<script type="text/javascript">
+    $.backstretch("{{ author.cover.url }}", {speed: 150});
+</script>
+</body>
+</html>

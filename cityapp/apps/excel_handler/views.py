@@ -1,4 +1,5 @@
 #coding:utf-8
+from filebrowser.functions import version_generator
 import os
 from django import forms
 from django.forms.util import ErrorList
@@ -156,9 +157,9 @@ def link_local_pics(area, place, pics_name_type):
     while findit:
         count += 1
         if pics_name_type == 'en':
-            file_name = convert_name(place.en_name) + '_%d' % count + '.jpg'
+            file_name = convert_name(place.en_name + '_%d' % count + '.jpg')
         elif pics_name_type == 'zh':
-            file_name = convert_name(place.zh_name) + '_%d' % count + '.jpg'
+            file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
         full_path = area_dir_path + '/' + file_name
         print full_path
         findit = site.storage.isfile(full_path)
@@ -166,4 +167,6 @@ def link_local_pics(area, place, pics_name_type):
             url = settings.MEDIA_URL + 'uploads/' + area.en_name + '/' + file_name
             pic = Picture(in_place=place, file_name = file_name, url = url)
             pic.save()
+            #生成不同版本
+            #[version_generator(full_path, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]
     return count - 1

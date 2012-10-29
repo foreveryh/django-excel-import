@@ -1,0 +1,22 @@
+<div class="navbar-inner">
+    <div class="container-fluid">
+        <a class="brand" href="#">途客圈城市系列APP</a>
+        <div class="nav-collapse collapse">
+            {% if user.is_authenticated %}
+            <p class="navbar-text pull-right">
+                当前用户为 <a href="#" class="navbar-link">{{ user.username }}</a>
+            </p>
+            <ul class="nav">
+                <li><a href="#">主页</a></li>
+                <li><a href="{% url import %}">导入数据</a></li>
+                <li><a href="/admin/">后台管理</a></li>
+            </ul>
+            {% else %}
+            <p class="navbar-text pull-right">
+                <a href="/accounts/signin/" class="navbar-link">登录</a>|
+                <a href="/accounts/signup/" class="navbar-link">注册</a>
+            </p>
+            {% endif %}
+        </div><!--/.nav-collapse -->
+    </div>
+</div>

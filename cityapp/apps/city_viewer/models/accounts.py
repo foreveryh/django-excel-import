@@ -12,9 +12,15 @@ class UserProfile(UserenaBaseProfile):
         verbose_name = verbose_name_plural = _('作者资料')
 
     user = models.OneToOneField(User, unique=True, verbose_name=_('作者'))
-    name = models.CharField(_('笔名'), max_length=20)
-    philosophy = models.CharField(_('旅行哲学'), max_length=255, blank=True)
+    name = models.CharField(_('姓名'), max_length=20)
+    cover = models.ImageField(_('封面'), upload_to='uploads/author',blank=True)
+    philosophy = models.CharField(_('旅行哲学'), max_length=255)
+    weibo_url = models.URLField(_('微博地址'), verify_exists=True, blank=True)
+    douban_url = models.URLField(_('豆瓣地址'), verify_exists=True, blank=True)
+    text = models.TextField(_('文字叙述'), blank=True)
     created_at = CreationDateTimeField()
 
+    def __unicode__(self):
+        return self.name
 
 

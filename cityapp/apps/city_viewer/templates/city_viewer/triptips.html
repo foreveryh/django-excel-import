@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0049)http://mi-talk.kakao.com/iphone/help?lang=zh-Hans -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="nocache">
+    <meta http-equiv="Expires" content="-1">
+    <style type="text/css">
+        html {
+            overflow-x:auto;
+            overflow-y:scroll;
+        }
+        body {
+            margin:0;
+            padding:10px 10px 10px 8px;
+            color:#666;
+            font-size:14px;
+            font-family:Helvetica;
+            background-color:#f1f1f1;
+            -webkit-text-size-adjust:none;
+        }
+        div,span,table,tr,th,td,thead,tbody,form,fieldset,label,input,p,select,adddress {
+            margin:0;
+            padding:0;
+        }
+        h1,h2,h3,h4,h5,h6 {
+            margin:0;
+            padding:0;
+        }
+        ul,ol,li,dl,dt,dd {
+            list-style:none;
+            margin:0;
+            padding:0;
+        }
+        li {
+            vertical-align:bottom;
+        }
+        img,fieldset {
+            border:0;
+        }
+        .pre-loading {
+            position:absolute;
+            top:-5000px;
+            left:-5000px;
+            background:url(/static/css/images/loading.gif) no-repeat;
+        }
+        .content {
+            position: relative;
+            background-color:#f8f8f8;
+            width:100%;
+            border:1px #E1E1E1 solid;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            overflow:hidden;
+        }
+        .content .line{
+            width: 1px;
+            background: #c8e3ff;
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 34px;
+        }
+        .content .description,.content .title {
+            margin:0;
+        }
+        .content .description {
+            padding:10px 14px 10px 44px;
+            display:block;
+            border-bottom: 1px #DFDFDF dashed;
+        }
+        .content .description.loading {
+            min-height:36px;
+            background:url(/static/css/images/loading.gif) no-repeat center center;
+        }
+        .content .description img {
+            margin-left:0;
+        }
+        .content .description h2{
+            font-size: 14px;
+            text-decoration: underline;
+        }
+        .content .description p{
+            margin:10px 0 0 10px;
+            font-size: 13px;
+        }
+        .content .description .activated_at {
+            color:#799eb7;
+            font-size:12px;
+            padding-top:20px;
+        }
+        .content .title {
+            cursor:pointer;
+            border-bottom: 1px #DFDFDF dashed;
+            background:url(/static/css/images/Info_Collapsed_icon.png) 10px 9px no-repeat;
+            height:44px;
+            padding:0 10px 0 44px;
+        }
+        table:last-child .title{
+            border: none;
+        }
+        .content .title h1{
+            font-size: 16px;
+        }
+        .content .title.notice {
+            display:block;
+            position:relative;
+        }
+        .content .title.on {
+            border-bottom-width:1px;
+            background:url(/static/css/images/Info_Expanded_icon.png) 5px 13px no-repeat;
+        }
+        .content .title .activated_at {
+            font-size:10px;
+            color:#799eb7;
+        }
+        .content td.title > div:first-child {
+            height:52px;
+            display:table-cell;
+            vertical-align:middle;
+        }
+        .content .new {
+            color:#d03838;
+            font-weight:bold;
+            position:absolute;
+            top:12px;
+            left:5px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var request = false;
+        try {
+            request = new XMLHttpRequest();
+        } catch (failed) {
+            request = false;
+        }
+
+        if (!request) {
+            alert("Error initializing XMLHttpRequest!");
+        }
+
+        function showNews(newsType, newsId) {
+            var url = "/iphone/" + newsType + "/show/" + newsId;
+            request.open("GET", url, true);
+            request.onreadystatechange = function() {
+                if (request.readyState == 4) {
+                    if (request.status == 200) {
+                        var description = document.getElementById('description-' + newsId);
+                        var descriptionBody = document.getElementById('description-show-' + newsId);
+                        descriptionBody.className = 'description';
+                        descriptionBody.innerHTML = request.responseText + descriptionBody.innerHTML;
+                        description.setAttribute('loaded', true);
+                    }
+                }
+            }
+            request.send(null);
+        }
+
+        function toggleNews(newsId) {
+            var description = document.getElementById('description-' + newsId);
+            var title = document.getElementById('title-' + newsId);
+            if (description.style.display != 'none') {
+                description.style.display = 'none';
+                description.firstChild.className = 'description';
+                title.className = ['title', description.getAttribute('type')].join(' ');
+            } else {
+                description.style.display = 'block';
+                title.className = ['title', description.getAttribute('type'), 'on'].join(' ');
+
+                if (!description.getAttribute('loaded')) {
+                    description.firstChild.className = 'description loading';
+                    showNews(description.getAttribute('type'), newsId);
+                }
+            }
+            return false;
+        }
+    </script>
+
+</head>
+<body>
+<div class="pre-loading"></div>
+<script type="text/javascript">
+    window.onload = function() {
+        var category = "all";
+        if(category != 'all') {
+            category_selected(category);
+        }
+    }
+
+    function category_selected(category) {
+        if ((category == null) || (category.length == 0)) {
+            for (loop = 0; loop < 50; loop++) {
+                var _category = "pgsd";
+                for (loop2 = 0; loop2 < _category.length; loop2++) {
+                    var _help_name = _category[loop2] + "-" + loop;
+                    var _help = document.getElementById(_help_name);
+                    if (_help != null){
+                        _help.style.display = '';
+                        break;
+                    }
+                }
+            }
+
+        } else {
+            for (loop = 0; loop < 50; loop++) {
+                var _category = "pgsd";
+                for (loop2 = 0; loop2 < _category.length; loop2++) {
+                    if (_category[loop2] == category) {
+                        var _help_name = _category[loop2] + "-" + loop;
+                        var _help = document.getElementById(_help_name);
+                        if (_help != null){
+                            _help.style.display = '';
+                            break;
+                        }
+                    } else {
+                        var _help_name = _category[loop2] + "-" + loop;
+                        var _help = document.getElementById(_help_name);
+                        if (_help != null) {
+                            _help.style.display = 'none';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    function onSelectCategory(category) {
+        category_selected(category.options[category.selectedIndex].value);
+    }
+</script>
+<div class="content">
+<div class="line"></div>
+{% for item in tips %}
+<table id="{{ forloop.counter0 }}" style="border:none;border-collapse:collapse;width:100%;">
+    <tbody>
+    <tr>
+        <td class="title help" id="title-{{ item.id }}" valign="middle" onclick="toggleNews('{{ item.id }}')">
+            <h1>{{ item.title }}</h1>
+        </td>
+    </tr>
+    <tr type="help" id="description-{{ item.id }}" style="display: none; " loaded="true">
+        <td class="description" id="description-show-{{ item.id }}">
+            <h2>{{ item.title }}</h2>
+            {{ item.content|safe }}
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endfor %}
+</div>
+</body>
+</html>

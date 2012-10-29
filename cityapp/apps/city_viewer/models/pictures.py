@@ -10,12 +10,14 @@ class Picture(models.Model):
     class Meta:
         app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('图片')
+        ordering = ['weight']
 
     id = UUIDField(primary_key=True)
     file_name = models.CharField(_('文件名'), max_length=50)
     url = models.URLField()
     desc = models.CharField(_('描述'), max_length=255, blank=True)
     in_place = models.ForeignKey(Place, verbose_name=_('地名'))
+    weight = models.SmallIntegerField(default=0)
     create_at = CreationDateTimeField()
 
     def __unicode__(self):
