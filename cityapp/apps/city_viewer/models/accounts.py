@@ -17,7 +17,6 @@ class UserProfile(UserenaBaseProfile):
     philosophy = models.CharField(_('旅行哲学'), max_length=255)
     weibo_url = models.URLField(_('微博地址'), verify_exists=True, blank=True)
     douban_url = models.URLField(_('豆瓣地址'), verify_exists=True, blank=True)
-    text = models.TextField(_('文字叙述'), blank=True)
     created_at = CreationDateTimeField()
 
     def __unicode__(self):

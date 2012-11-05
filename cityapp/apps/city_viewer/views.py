@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.views.generic import ListView, TemplateView
 from django.contrib.auth.models import User
-from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip
+from appinfo.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip
 
 
 class HomeView(ListView):

@@ -80,12 +80,20 @@
             Dajaxice.import.data(
             function(d){
                 var message = d.message != 'ok' ? d.message: "导入完成，请到后台查看。";
-                loading.html('');
                 alert(message);
+                generate_images();
             },{'city': JSON.stringify({'zh_name': zh_name, 'en_name': en_name, 'type': file_type}),
                'data': $('#id_converted_data').val()
             });
 
         }
+    }
+//Generate Images
+    var generate_images = function(e){
+        Dajaxice.generate.images(
+            function(d){
+            var message = d.message != 'ok' ? d.message: "生成图片成功";
+            alert(message);
+        },{});
     }
 {% endblock %}

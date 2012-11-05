@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from guardian.admin import GuardedModelAdmin
-from cityapp.apps.city_viewer.models import Area, Place, Topic, Picture, TripTip
-from cityapp.apps.city_viewer.utils import *
+from appinfo.apps.city_viewer.models import Area, Place, Topic, Picture, TripTip
+from appinfo.apps.city_viewer.utils import *
 
 
 class AreaAdmin(GuardedModelAdmin):
@@ -28,7 +28,8 @@ class TopicAdmin(GuardedModelAdmin):
     pass
 
 class PictureAdmin(GuardedModelAdmin):
-    pass
+    search_fields = ['file_name']
+    search_fields_verbose = ['文件名']
 
 from tinymce.widgets import TinyMCE
 

@@ -6,7 +6,7 @@ import sqlite3
 from string import Template
 from django.conf import settings
 from django.utils import simplejson
-from cityapp.apps.city_viewer.models import Area
+from appinfo.apps.city_viewer.models import Area
 
 
 topic_template = Template("""INSERT INTO "city_topic" VALUES('${id}','${name}','${desc}',${in_area_id},${weight});""")

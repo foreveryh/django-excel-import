@@ -6,12 +6,12 @@ from django.forms.util import ErrorList
 from django.utils import simplejson
 from django.views.generic import FormView, TemplateView, CreateView
 from django.conf import settings
-from cityapp.apps.excel_handler.forms import ImportExcelForm
-from cityapp.apps.city_viewer.models import  Area, Place, Topic, Picture
+from appinfo.apps.excel_handler.forms import ImportExcelForm
+from appinfo.apps.city_viewer.models import  Area, Place, Topic, Picture
 from dajaxice.decorators import dajaxice_register
 from filebrowser.sites import site
 from unidecode import unidecode
-from cityapp.utils import convert_name
+from appinfo.utils import convert_name
 
 class ImportError(Exception):
     """
@@ -51,26 +51,51 @@ class ImportExcel(FormView):
 
 #####################################################################
 #    verify and import excel data to database by an ajax request    #
+dataDict = {}
+cityDict = {}
+@dajaxice_register(method='POST', name='generate.images')
+def generate_images(request):
+    """生成不同版本图片"""
+    type = cityDict['type']
+    places = dataDict[0]
+    area = Area.objects.get(zh_name=cityDict['zh_name'])
+    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', area.en_name)
+    export_path = os.path.join(settings.STATIC_ROOT,'cities/',area.en_name,'images/')
+    for place in places:
+        #首先通过英文名称查找
+        findit = True
+        count = 0
+        while findit:
+            count += 1
+            if type == 'en':
+                file_name = convert_name(place.en_name + '_%d' % count + '.jpg')
+            elif type == 'zh':
+                file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
+            full_path = area_dir_path + '/' + file_name
+            findit = site.storage.isfile(full_path)
+            if findit:
+                if count == 1:
+                    [version_generator(export_path, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]
+    return {'message': 'ok'}
 
 @dajaxice_register(method='POST', name="import.data")
 def check_area(request, city, data):
     message = {'message': None}
-    data =  simplejson.loads(data)
-    city = simplejson.loads(city)
-    print city['type']
+    dataDict =  simplejson.loads(data)
+    cityDict = simplejson.loads(city)
     #检测图片文件夹是否存在
-    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', city['en_name'])
+    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', cityDict['en_name'])
     if not site.storage.isdir(area_dir_path):
         message['message']=u'图片文件夹不存在'
         return simplejson.dumps(message)
     try:
-        area = Area.objects.get(zh_name=city['zh_name'])
+        area = Area.objects.get(zh_name=cityDict['zh_name'])
     except Area.DoesNotExist:
         #新建城市
         user = request.user
-        area = Area(zh_name=city['zh_name'], en_name=city['en_name'], owner=user)
+        area = Area(zh_name=cityDict['zh_name'], en_name=cityDict['en_name'], owner=user)
         area.save()
-        message['message'] = import_data(area, data, city['type'])
+        message['message'] = import_data(area, data, cityDict['type'])
     else:
         message['message'] = u'城市已经存在'
     return simplejson.dumps(message)
@@ -143,7 +168,13 @@ def handle_place_data(item):
     #处理图片
     pictures = item['pictures'].split(',')
     item.pop('pictures')
-    #新建地点
+    #处理电话、网站格式
+    item['tel'] = item['tel'].replace(' ','-')
+    if item['website'].startswith('http://'):
+        item['website'] = item['website'][7:]
+    print item['tel']
+    print item['website']
+    #丢掉不用的
     item.pop('topic')
     item.pop('slug')
     return item
@@ -161,12 +192,9 @@ def link_local_pics(area, place, pics_name_type):
         elif pics_name_type == 'zh':
             file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
         full_path = area_dir_path + '/' + file_name
-        print full_path
         findit = site.storage.isfile(full_path)
         if findit:
             url = settings.MEDIA_URL + 'uploads/' + area.en_name + '/' + file_name
             pic = Picture(in_place=place, file_name = file_name, url = url)
             pic.save()
-            #生成不同版本
-            #[version_generator(full_path, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]
     return count - 1
