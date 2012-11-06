@@ -6,7 +6,8 @@ import sqlite3
 from string import Template
 from django.conf import settings
 from django.utils import simplejson
-from appinfo.apps.city_viewer.models import Area
+from filebrowser.sites import site
+from cityapp.apps.city_viewer.models import Area
 
 
 topic_template = Template("""INSERT INTO "city_topic" VALUES('${id}','${name}','${desc}',${in_area_id},${weight});""")
@@ -78,13 +79,20 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
             fp.write('COMMIT;')
 
 def export_city_db(name):
-    db_dir_path = os.path.join(settings.STATIC_ROOT, 'city_db/')
-    sql_path = db_dir_path + name + '.sql'
-    db_path = db_dir_path + name + '.db'
+    area_dir_path = os.path.join(settings.STATIC_ROOT, 'cities/', name)
+    #检查目录
+    if not site.storage.isdir(area_dir_path):
+        raise IOError
+    #生成db
+    sql_path = area_dir_path + name + '.sql'
+    db_path = area_dir_path + name + '.db'
     with open(sql_path, 'r') as fp:
         connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
         cursor.executescript(fp.read())
         connection.commit()
         cursor.close()
+    #删除sql脚本
+    site.storage.delete(sql_path)
 
+#######################################################

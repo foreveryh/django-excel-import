@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import UUIDField
-from appinfo.apps.city_viewer.models import Place
+from cityapp.apps.city_viewer.models import Place
 from django_extensions.db.fields import CreationDateTimeField
 from django.conf import settings
 class Picture(models.Model):

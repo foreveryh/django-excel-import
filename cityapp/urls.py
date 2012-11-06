@@ -3,8 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView, ListView
-from appinfo.apps.excel_handler.views import ImportExcel
-from appinfo.apps.city_viewer.views import CityViewerView, HomeView, TripTipView, AboutMeView
+from cityapp.apps.excel_handler.views import ImportExcel
+from cityapp.apps.city_viewer.views import CityViewerView, HomeView, TripTipView, AboutMeView
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from filebrowser.sites import site
 import tinymce

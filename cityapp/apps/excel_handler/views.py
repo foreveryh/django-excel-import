@@ -6,12 +6,12 @@ from django.forms.util import ErrorList
 from django.utils import simplejson
 from django.views.generic import FormView, TemplateView, CreateView
 from django.conf import settings
-from appinfo.apps.excel_handler.forms import ImportExcelForm
-from appinfo.apps.city_viewer.models import  Area, Place, Topic, Picture
+from cityapp.apps.excel_handler.forms import ImportExcelForm
+from cityapp.apps.city_viewer.models import  Area, Place, Topic, Picture
 from dajaxice.decorators import dajaxice_register
 from filebrowser.sites import site
 from unidecode import unidecode
-from appinfo.utils import convert_name
+from cityapp.utils import convert_name
 
 class ImportError(Exception):
     """
@@ -59,8 +59,11 @@ def generate_images(request):
     type = cityDict['type']
     places = dataDict[0]
     area = Area.objects.get(zh_name=cityDict['zh_name'])
-    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', area.en_name)
-    export_path = os.path.join(settings.STATIC_ROOT,'cities/',area.en_name,'images/')
+    resource_path = os.path.join(settings.MEDIA_ROOT, 'uploads', area.en_name)
+    export_path = os.path.join(settings.STATIC_ROOT,'cities',area.en_name,'images')
+    #新建目录
+    if not site.storage.isdir(export_path):
+        os.mkdir(export_path)
     for place in places:
         #首先通过英文名称查找
         findit = True
@@ -71,7 +74,7 @@ def generate_images(request):
                 file_name = convert_name(place.en_name + '_%d' % count + '.jpg')
             elif type == 'zh':
                 file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
-            full_path = area_dir_path + '/' + file_name
+            full_path = resource_path + '/' + file_name
             findit = site.storage.isfile(full_path)
             if findit:
                 if count == 1:
@@ -93,7 +96,7 @@ def check_area(request, city, data):
     except Area.DoesNotExist:
         #新建城市
         user = request.user
-        area = Area(zh_name=cityDict['zh_name'], en_name=cityDict['en_name'], owner=user)
+        area = Area(zh_name=cityDict['zh_name'], en_name=cityDict['en_name'], author=user)
         area.save()
         message['message'] = import_data(area, data, cityDict['type'])
     else:

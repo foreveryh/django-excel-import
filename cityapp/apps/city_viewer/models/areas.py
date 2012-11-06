@@ -16,11 +16,11 @@ class Area(models.Model):
             )
     zh_name = models.CharField(_('中文名'), max_length=50, unique=True)
     en_name = models.CharField(_('英文名'), max_length=50, unique=True, blank=True)
-    cover_pic = models.ImageField(_('封面'), upload_to='uploads/cities/' + en_name, blank=True)
+    cover_pic = models.ImageField(_('封面'), upload_to='uploads/coverimage/', blank=True)
     author = models.ForeignKey(User, verbose_name=_('负责人'))
     author_desc = models.TextField(_('关于作者'))
     create_at = CreationDateTimeField()
-    offlineMapFile = models.FileField(_('离线地图'), upload_to='',blank=True)
+    offline_map = models.FileField(_('离线地图'), upload_to='uploads/offlinemap/',blank=True)
 
     def __unicode__(self):
         return self.zh_name

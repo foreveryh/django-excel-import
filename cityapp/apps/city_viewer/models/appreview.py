@@ -13,11 +13,11 @@ class APPReview(models.Model):
         app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('App反馈')
 
-    title = models.CharField(_('标题'), blank=True)
+    title = models.CharField(_('标题'), max_length=100, blank=True)
     content = models.TextField(_('内容'))
     datetime = models.DateTimeField(_('时间'))
-    contact = models.CharField(_('联系方式'), blank=True)
-    tracked = models.CharField(_('追踪'), blank=True)
+    contact = models.CharField(_('联系方式'), max_length=50, blank=True)
+    tracked = models.CharField(_('追踪'), max_length=255, blank=True)
     source = models.CharField(_('来源'), max_length=3, choices=SOURCE_CHOICES)
 
     def __unicode__(self):

@@ -10,8 +10,8 @@ class APPInfo(models.Model):
         verbose_name = verbose_name_plural = _('城市APP')
 
     name = models.CharField(_('名称'), max_length=50, unique=True)
-    icon = models.ImageField(_('Icon'))
-    desc = models.TextField(_('App描述'))
+    icon = models.ImageField(_('Icon'), upload_to='uploads/appicons/')
+    desc = models.TextField(_('App描述'), max_length=255)
     link = models.URLField(_('App Store链接'), blank=True)
     liked = models.SmallIntegerField(_('喜欢数'), default=100)
     down_count = models.SmallIntegerField(_('下载量'), default=0, editable=False)
