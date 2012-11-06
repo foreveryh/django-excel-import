@@ -20,7 +20,6 @@ class Area(models.Model):
     author = models.ForeignKey(User, verbose_name=_('负责人'))
     author_desc = models.TextField(_('关于作者'))
     create_at = CreationDateTimeField()
-    offline_map = models.FileField(_('离线地图'), upload_to='uploads/offlinemap/',blank=True)
 
     def __unicode__(self):
         return self.zh_name

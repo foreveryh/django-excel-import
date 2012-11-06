@@ -1,17 +1,20 @@
 #coding:utf-8
 from filebrowser.functions import version_generator
 import os
+import shutil
 from django import forms
 from django.forms.util import ErrorList
 from django.utils import simplejson
 from django.views.generic import FormView, TemplateView, CreateView
 from django.conf import settings
 from cityapp.apps.excel_handler.forms import ImportExcelForm
-from cityapp.apps.city_viewer.models import  Area, Place, Topic, Picture
+from cityapp.apps.city_viewer.models import  Area, Place, Topic, Picture, TripTip
 from dajaxice.decorators import dajaxice_register
 from filebrowser.sites import site
 from unidecode import unidecode
 from cityapp.utils import convert_name
+import globals as v
+
 
 class ImportError(Exception):
     """
@@ -51,18 +54,23 @@ class ImportExcel(FormView):
 
 #####################################################################
 #    verify and import excel data to database by an ajax request    #
-dataDict = {}
-cityDict = {}
+
+
+
 @dajaxice_register(method='POST', name='generate.images')
-def generate_images(request):
+def generate_images(request,city, data):
     """生成不同版本图片"""
-    type = cityDict['type']
-    places = dataDict[0]
-    area = Area.objects.get(zh_name=cityDict['zh_name'])
+    v.dataDict = simplejson.loads(data)
+    v.cityDict = simplejson.loads(city)
+    type = v.cityDict['type']
+    places = v.dataDict[0]
+    area = Area.objects.get(zh_name=v.cityDict['zh_name'])
     resource_path = os.path.join(settings.MEDIA_ROOT, 'uploads', area.en_name)
-    export_path = os.path.join(settings.STATIC_ROOT,'cities',area.en_name,'images')
-    #新建目录
-    if not site.storage.isdir(export_path):
+    area_dir_path = os.path.join(settings.STATIC_ROOT,'cities',area.en_name)
+    if not os.path.isdir(area_dir_path):
+        os.mkdir(area_dir_path)
+    export_path = os.path.join(area_dir_path,'images')
+    if not os.path.isdir(export_path):
         os.mkdir(export_path)
     for place in places:
         #首先通过英文名称查找
@@ -71,34 +79,38 @@ def generate_images(request):
         while findit:
             count += 1
             if type == 'en':
-                file_name = convert_name(place.en_name + '_%d' % count + '.jpg')
+                file_name = convert_name(place['en_name'] + '_%d' % count + '.jpg')
             elif type == 'zh':
-                file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
+                file_name = convert_name(place['zh_name'] + '_%d' % count + '.jpg')
             full_path = resource_path + '/' + file_name
-            findit = site.storage.isfile(full_path)
+            findit = os.path.isfile(full_path)
             if findit:
-                if count == 1:
-                    [version_generator(export_path, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]
-    return {'message': 'ok'}
+                for path in [version_generator(full_path, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]:
+                    try:
+                        shutil.move(path, export_path)
+                    except:
+                        raise IOError
+
+    return simplejson.dumps({'message':'ok'})
 
 @dajaxice_register(method='POST', name="import.data")
 def check_area(request, city, data):
     message = {'message': None}
-    dataDict =  simplejson.loads(data)
-    cityDict = simplejson.loads(city)
+    v.dataDict = simplejson.loads(data)
+    v.cityDict = simplejson.loads(city)
     #检测图片文件夹是否存在
-    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', cityDict['en_name'])
-    if not site.storage.isdir(area_dir_path):
+    area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', v.cityDict['en_name'])
+    if not os.path.isdir(area_dir_path):
         message['message']=u'图片文件夹不存在'
         return simplejson.dumps(message)
     try:
-        area = Area.objects.get(zh_name=cityDict['zh_name'])
+        area = Area.objects.get(zh_name=v.cityDict['zh_name'])
     except Area.DoesNotExist:
         #新建城市
         user = request.user
-        area = Area(zh_name=cityDict['zh_name'], en_name=cityDict['en_name'], author=user)
+        area = Area(zh_name=v.cityDict['zh_name'], en_name=v.cityDict['en_name'], author=user)
         area.save()
-        message['message'] = import_data(area, data, cityDict['type'])
+        message['message'] = import_data(area, v.dataDict, v.cityDict['type'])
     else:
         message['message'] = u'城市已经存在'
     return simplejson.dumps(message)
@@ -107,8 +119,20 @@ def import_data(area, data, type):
     """
     Import data to database
     """
-    #导入主题
     msg = 'ok'
+    #导入Tips
+    tips = data[2]
+    for item in tips:
+        try:
+            tip = TripTip.objects.get(title=item['title'], in_area=area)
+        except TripTip.DoesNotExist:
+            #新建tip
+            tipDict = handle_tip_data(item)
+            tip = TripTip(**tipDict)
+            tip.in_area = area
+            tip.save()
+
+    #导入主题
     topics = data[1]
     ttopics = []
     for item in topics:
@@ -116,7 +140,8 @@ def import_data(area, data, type):
             topic = Topic.objects.get(name=item['name'], in_area=area)
         except Topic.DoesNotExist:
             #新建主题
-            topic = Topic(**item)
+            topicDict = handle_topic_data(item, type)
+            topic = Topic(**topicDict)
             topic.in_area = area
             topic.save()
         finally:
@@ -147,6 +172,19 @@ def import_data(area, data, type):
             link_local_pics(area, place, type)
     return msg
 
+def handle_tip_data(item):
+    #处理超链接
+    item['content'] = item['content'].replace("##","<br/>")
+    return item
+
+def handle_topic_data(item, type):
+    #处理cover_pic
+    if type == 'en':
+        file_name = convert_name(item['cover_pic'])
+    elif type == 'zh':
+        file_name = convert_name(item['cover_pic'])
+    item['cover_pic'] = file_name
+    return item
 
 categoryDict = {u'景点': 1, u'餐厅': 1<<1, u'购物': 1<<2, u'娱乐': 1<<3}
 fittimeDict = {u'上午': 1, u'下午': 1<<1, u'晚上': 1<<2, u'全天': 1<<3}
@@ -195,7 +233,7 @@ def link_local_pics(area, place, pics_name_type):
         elif pics_name_type == 'zh':
             file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
         full_path = area_dir_path + '/' + file_name
-        findit = site.storage.isfile(full_path)
+        findit = os.path.isfile(full_path)
         if findit:
             url = settings.MEDIA_URL + 'uploads/' + area.en_name + '/' + file_name
             pic = Picture(in_place=place, file_name = file_name, url = url)

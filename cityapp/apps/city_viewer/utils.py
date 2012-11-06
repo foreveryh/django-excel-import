@@ -10,11 +10,12 @@ from filebrowser.sites import site
 from cityapp.apps.city_viewer.models import Area
 
 
-topic_template = Template("""INSERT INTO "city_topic" VALUES('${id}','${name}','${desc}',${in_area_id},${weight});""")
+topic_template = Template("""INSERT INTO "city_topic" VALUES('${id}','${name}','${desc}','${cover_pic}',${weight});""")
 #place_template = Template("""INSERT INTO "city_place" VALUES('${id}','${zh_name}','${en_name}',${category},${in_area_id},'${longitude}','${latitude}','${short_desc}','${full_desc}',${fit_time},'${open_time}','${address}','${traffic}','${price}','${tel}','${website}','${tips}','${modified_at}'); """)
-place_template = Template("""INSERT INTO "city_place" VALUES('${id}','${zh_name}','${en_name}',${category},${in_area_id},'${longitude}','${latitude}','${short_desc}',${fit_time},'${info}');""")
+place_template = Template("""INSERT INTO "city_place" VALUES('${id}','${zh_name}','${en_name}',${category},'${longitude}','${latitude}','${short_desc}',${fit_time},'${info}');""")
 place_in_topic_template = Template("""INSERT INTO "city_place_in_topics" VALUES('${id}','${place_id}','${topic_id}');""");
 picture_template = Template("""INSERT INTO "city_picture" VALUES('${id}','${file_name}','${url}','${desc}','${in_place_id}','${create_at}');""")
+meta_template = Template("""INSERT INTO "city_meta" VALUES('${key}', '${value}');""")
 
 def handle_single_quote(**dict):
     for key, value in dict.items():
@@ -54,6 +55,14 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
         dst = db_dir_path + name + '.sql'
         shutil.copyfile(src, dst)
         with open(dst, 'a') as fp:
+            #meta info
+            meta = []
+            meta.append({"key":"author_name", "value":area.author.get_profile().name})
+            meta.append({"key":"author_desc", "value":area.author_desc})
+            for info in meta:
+                line = meta_template.safe_substitute(info).encode('utf-8')
+                fp.write('%s\n' % line)
+            #Topic
             topics = area.topic_set.all()
             count = 0
             for topic in topics:
@@ -69,7 +78,7 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
                 info = generate_place_info(place)
                 print info
                 line = place_template.substitute(id=place.id, zh_name=place.zh_name, en_name=place.en_name, \
-                    category=place.category, in_area_id=place.in_area_id, longitude=place.longitude, latitude=place.latitude, \
+                    category=place.category, longitude=place.longitude, latitude=place.latitude, \
                     fit_time = place.fit_time, short_desc=place.short_desc, info=info).encode('utf-8')
                 fp.write('%s\n' % line)
                 for pic in place.picture_set.all():
@@ -79,13 +88,14 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
             fp.write('COMMIT;')
 
 def export_city_db(name):
-    area_dir_path = os.path.join(settings.STATIC_ROOT, 'cities/', name)
+    db_dir_path = os.path.join(settings.STATIC_ROOT, 'city_db/')
+    export_path = os.path.join(settings.STATIC_ROOT, 'cities/', name)
     #检查目录
-    if not site.storage.isdir(area_dir_path):
+    if not os.path.isdir(export_path):
         raise IOError
     #生成db
-    sql_path = area_dir_path + name + '.sql'
-    db_path = area_dir_path + name + '.db'
+    sql_path = os.path.join(db_dir_path, name + '.sql')
+    db_path = os.path.join(export_path, name + '.db')
     with open(sql_path, 'r') as fp:
         connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
@@ -93,6 +103,6 @@ def export_city_db(name):
         connection.commit()
         cursor.close()
     #删除sql脚本
-    site.storage.delete(sql_path)
+    os.remove(sql_path)
 
 #######################################################

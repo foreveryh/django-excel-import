@@ -1,17 +1,14 @@
 BEGIN;
-CREATE TABLE "city_area" (
-    "id" integer NOT NULL PRIMARY KEY,
-    "zh_name" varchar(50) NOT NULL UNIQUE,
-    "en_name" varchar(50) NOT NULL UNIQUE,
-    "cover_pic" varchar(100) NOT NULL,
-    "create_at" datetime NOT NULL
+CREATE TABLE "city_meta" (
+    "key" varchar(50) NOT NULL UNIQUE,
+    "value" varchar(50) NOT NULL
 )
 ;
 CREATE TABLE "city_topic" (
     "id" varchar(36) NOT NULL PRIMARY KEY,
     "name" varchar(50) NOT NULL,
     "desc" varchar(255) NOT NULL,
-    "in_area_id" integer NOT NULL REFERENCES "city_area" ("id"),
+    "cover_pic" varchar(100) NOT NULL,
     "weight" smallint NOT NULL
 )
 ;
@@ -27,7 +24,6 @@ CREATE TABLE "city_place" (
     "zh_name" varchar(50) NOT NULL,
     "en_name" varchar(100) NOT NULL,
     "category" smallint NOT NULL,
-    "in_area_id" integer NOT NULL REFERENCES "city_area" ("id"),
     "longitude" varchar(20) NOT NULL,
     "latitude" varchar(20) NOT NULL,
     "short_desc" varchar(100) NOT NULL,
@@ -44,8 +40,6 @@ CREATE TABLE "city_picture" (
     "create_at" datetime NOT NULL
 )
 ;
-CREATE INDEX "city_topic_c21db00" ON "city_topic" ("in_area_id");
-CREATE INDEX "city_place_c21db00" ON "city_place" ("in_area_id");
 CREATE INDEX "city_picture_3ee6582b" ON "city_picture" ("in_place_id");
 
 

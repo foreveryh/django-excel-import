@@ -124,6 +124,7 @@ class Base(Settings):
         'big': {'verbose_name': u'景点大图', 'width': 640, 'height': 480, 'opts': 'crop'},
         'large': {'verbose_name': u'大图', 'width': 640, 'height': '', 'opts': ''},
         }
+    FILEBROWSER_VERSIONS_BASEDIR = 'images/'
 
     TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
     TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")

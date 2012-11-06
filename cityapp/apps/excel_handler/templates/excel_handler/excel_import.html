@@ -10,9 +10,10 @@
             <tr>
                 <td>
                     {% if uploaded and converted_data %}
-                        <input class="btn" type="button" onclick="import_data()" value="开始导入数据"/>
+                        <input id="import-data" class="btn" type="button" onclick="import_data(0)" value="开始导入数据"/>
+                        <input id="import-image" class="btn" type="button" onclick="import_data(1)" value="生成图片"/>
                     {% else %}
-                        <input type="submit" value="上传"/>
+                        <input id="upload" type="submit" value="上传"/>
                     {% endif %}
                 </td>
             </tr>
@@ -77,23 +78,28 @@
         else{
             var loading = $("#loading");
             loading.html('<div class="circle"></div><div class="circle1"></div>');
-            Dajaxice.import.data(
-            function(d){
-                var message = d.message != 'ok' ? d.message: "导入完成，请到后台查看。";
+            if(e == 0){
+                Dajaxice.import.data(
+                function(d){
+                if(d.message != 'ok'){
                 alert(message);
-                generate_images();
-            },{'city': JSON.stringify({'zh_name': zh_name, 'en_name': en_name, 'type': file_type}),
-               'data': $('#id_converted_data').val()
-            });
-
+                }else{
+                alert("导入完成，当前即可浏览。如第一次导入请生成不同格式的图片");
+                }
+                },{'city': JSON.stringify({'zh_name': zh_name, 'en_name': en_name, 'type': file_type}),
+                'data': $('#id_converted_data').val()
+                });
+            }else{
+                Dajaxice.generate.images(
+                function(d){
+                var message = d.message != 'ok' ? d.message: "生成图片成功";
+                alert(message);
+                $("#import").remove();
+                $("#loading").remove();
+                },{'city': JSON.stringify({'zh_name': zh_name, 'en_name': en_name, 'type': file_type}),
+                'data': $('#id_converted_data').val()
+                });
+            }
         }
-    }
-//Generate Images
-    var generate_images = function(e){
-        Dajaxice.generate.images(
-            function(d){
-            var message = d.message != 'ok' ? d.message: "生成图片成功";
-            alert(message);
-        },{});
     }
 {% endblock %}
