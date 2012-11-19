@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.forms import *
 from django.db.models import *
 from tinymce.widgets import TinyMCE

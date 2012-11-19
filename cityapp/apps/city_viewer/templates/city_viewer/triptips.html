@@ -21,7 +21,7 @@
             background-color:#f1f1f1;
             -webkit-text-size-adjust:none;
         }
-        div,span,table,tr,th,td,thead,tbody,form,fieldset,label,input,p,select,adddress {
+        div,span,table,tr,th,td,thead,tbody,form,fieldset,label,input,p,select {
             margin:0;
             padding:0;
         }
@@ -44,7 +44,7 @@
             position:absolute;
             top:-5000px;
             left:-5000px;
-            background:url(/static/css/images/loading.gif) no-repeat;
+            background:url(loading.gif) no-repeat;
         }
         .content {
             position: relative;
@@ -68,13 +68,13 @@
             margin:0;
         }
         .content .description {
-            padding:10px 14px 10px 44px;
+            padding:10px;
             display:block;
             border-bottom: 1px #DFDFDF dashed;
         }
         .content .description.loading {
             min-height:36px;
-            background:url(/static/css/images/loading.gif) no-repeat center center;
+            background:url(loading.gif) no-repeat center center;
         }
         .content .description img {
             margin-left:0;
@@ -95,12 +95,24 @@
         .content .title {
             cursor:pointer;
             border-bottom: 1px #DFDFDF dashed;
-            background:url(/static/css/images/Info_Collapsed_icon.png) 10px 9px no-repeat;
-            background-position: 15px 15px;
             height:44px;
-            padding:0 10px 0 44px;
+            padding:0 10px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        .content .triangle{
+            width: 34px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px #DFDFDF dashed;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        .content .triangle-none{
+            width: 34px;
         }
         table:last-child .title{
+            border: none;
+        }
+        table:last-child .triangle{
             border: none;
         }
         .content .title h1{
@@ -112,8 +124,6 @@
         }
         .content .title.on {
             border-bottom-width:1px;
-            background:url(/static/css/images/Info_Expanded_icon.png) 5px 13px no-repeat;
-            background-position: 10px 16px;
         }
         .content .title .activated_at {
             font-size:10px;
@@ -165,14 +175,20 @@
         function toggleNews(newsId) {
             var description = document.getElementById('description-' + newsId);
             var title = document.getElementById('title-' + newsId);
+            var triangle = document.getElementById('triangle-img-' + newsId);
             if (description.style.display != 'none') {
                 description.style.display = 'none';
                 description.firstChild.className = 'description';
                 title.className = ['title', description.getAttribute('type')].join(' ');
+                triangle.src="Info_Collapsed_icon.png";
+                triangle.style.width="7px";
+                triangle.style.height="13px";
             } else {
-                description.style.display = 'block';
+                description.style.display = '';
                 title.className = ['title', description.getAttribute('type'), 'on'].join(' ');
-
+                triangle.src="Info_Expanded_icon.png";
+                triangle.style.width="12px";
+                triangle.style.height="9px";
                 if (!description.getAttribute('loaded')) {
                     description.firstChild.className = 'description loading';
                     showNews(description.getAttribute('type'), newsId);
@@ -242,11 +258,13 @@
 <table id="{{ forloop.counter0 }}" style="border:none;border-collapse:collapse;width:100%;">
     <tbody>
     <tr>
+        <td class="triangle" onclick="toggleNews('{{ item.id }}')"><img id="triangle-img-{{ item.id }}" src="Info_Collapsed_icon.png" style="width: 7px;height: 13px" /></td>
         <td class="title help" id="title-{{ item.id }}" valign="middle" onclick="toggleNews('{{ item.id }}')">
             <h1>{{ item.title }}</h1>
         </td>
     </tr>
     <tr type="help" id="description-{{ item.id }}" style="display: none; " loaded="true">
+        <td class="triangle-none">&nbsp;</td>
         <td class="description" id="description-show-{{ item.id }}">
             <h2>{{ item.title }}</h2>
             {{ item.content|safe }}

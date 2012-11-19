@@ -1,4 +1,4 @@
-#coding:utf-8
+# -*- coding: utf-8 -*-
 from filebrowser.functions import version_generator
 import os
 import shutil
@@ -160,7 +160,9 @@ def import_data(area, data, type):
         #新建景点
             place_topic = item['topic'].split(',')
             placeDict = handle_place_data(item)
+            #print placeDict.values()
             place = Place(**placeDict)
+            print place.en_name
             place.in_area = area
             place.save()
             #处理主题
@@ -213,11 +215,20 @@ def handle_place_data(item):
     item['tel'] = item['tel'].replace(' ','-')
     if item['website'].startswith('http://'):
         item['website'] = item['website'][7:]
-    print item['tel']
-    print item['website']
     #丢掉不用的
     item.pop('topic')
     item.pop('slug')
+    #打印数据查找错误
+    #print item['zh_name']
+    #print item['en_name']
+    #print item['short_desc']
+    #print item['full_desc']
+    #print item['fittime']
+    #print item['price']
+    #print item['category']
+    #print item['tel']
+    #print item['website']
+
     return item
 
 def link_local_pics(area, place, pics_name_type):

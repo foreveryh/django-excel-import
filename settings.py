@@ -25,6 +25,7 @@ class Base(Settings):
 
     DEFAULT_FROM_EMAIL = 'noreply@tukeq.com'.format(DOMAIN)
     INSTALLED_APPS = (
+        'grappelli.dashboard',
         'grappelli',
         'django.contrib.admin',
         'django.contrib.auth',
@@ -47,6 +48,7 @@ class Base(Settings):
         'tinymce',
         'cityapp.apps.excel_handler',
         'cityapp.apps.city_viewer',
+        'rest_framework',
     )
     TIME_ZONE = 'Asia/Shanghai'
     LANGUAGE_CODE = 'zh-cn'
@@ -71,10 +73,10 @@ class Base(Settings):
     TEMPLATE_CONTEXT_PROCESSORS =(
         'django.contrib.auth.context_processors.auth',
         'django.core.context_processors.debug',
+        'django.core.context_processors.request',
         'django.core.context_processors.i18n',
         'django.core.context_processors.media',
         'django.core.context_processors.static',
-        'django.core.context_processors.request',
         'django.contrib.messages.context_processors.messages'
     )
 
@@ -136,7 +138,17 @@ class Base(Settings):
         'relative_urls': False,
     }
 
-    GRAPPELLI_ADMIN_TITLE = 'City App Manager'
+    GRAPPELLI_ADMIN_TITLE = u'城市系列App管理后台'
+    GRAPPELLI_INDEX_DASHBOARD = 'cityapp.apps.city_viewer.dashboard.CustomIndexDashboard'
+
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.BasicAuthentication',
+            ),
+        'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+            )
+    }
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES

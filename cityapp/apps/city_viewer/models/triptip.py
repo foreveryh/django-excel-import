@@ -10,7 +10,7 @@ class TripTip(models.Model):
     class Meta:
         app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('旅行贴士')
-        ordering = ['-weight']
+        ordering = ['weight']
 
     id = UUIDField(primary_key=True)
     title = models.CharField(_('主题名'), max_length=50)

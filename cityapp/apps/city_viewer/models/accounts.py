@@ -20,6 +20,6 @@ class UserProfile(UserenaBaseProfile):
     created_at = CreationDateTimeField()
 
     def __unicode__(self):
-        return self.name
+        return self.user.username
 
 
