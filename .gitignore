@@ -17,3 +17,6 @@ static/*
 #database
 *.db
 *.DS_Store
+
+#logs
+.logs
