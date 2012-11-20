@@ -156,7 +156,7 @@ class Base(Settings):
 
     TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
     TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")
-    
+
 class LocalDev(Base):
     DATABASES = Base.DATABASES
     DEBUG = True

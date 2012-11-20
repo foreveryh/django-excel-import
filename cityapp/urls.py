@@ -7,7 +7,7 @@ from dajaxice.core import dajaxice_autodiscover, dajaxice_config
 from filebrowser.sites import site
 import tinymce
 from cityapp.apps.excel_handler.views import ImportExcel
-from cityapp.apps.city_viewer.views import CityViewerView, HomeView, TripTipView, AboutMeView
+from cityapp.apps.city_viewer.views import CityViewerView, IndexView, HomeView, TripTipView, AboutMeView
 from cityapp.apps.city_viewer.api import app_metadata, app_links, like_me, install_me, feedback
 
 dajaxice_autodiscover()
@@ -34,6 +34,7 @@ urlpatterns += patterns('',
     url(r'^(?P<city>\w+)/tips/$', TripTipView.as_view(), name='city_info'),
     url(r'^authors/(?P<author>\w+)/$',AboutMeView.as_view(), name='about_me'),
     url(r'^import/excel/', login_required(ImportExcel.as_view()), name='import_excel'),
-    url(r'^import/guide/', TemplateView.as_view(template_name='city_viewer/stepbystep.html'), name='import'),
-    url(r'', HomeView.as_view(), name='index')
+    url(r'^import/guide/', login_required(TemplateView.as_view(template_name='city_viewer/stepbystep.html')), name='import'),
+    url(r'^home/', login_required(HomeView.as_view()), name='home'),
+    url(r'', IndexView.as_view(), name='index'),
 ) + staticfiles_urlpatterns()

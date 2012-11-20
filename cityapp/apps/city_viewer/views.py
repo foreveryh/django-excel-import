@@ -2,8 +2,16 @@
 from __future__ import unicode_literals
 from django.views.generic import ListView, TemplateView
 from django.contrib.auth.models import User
-from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip
+from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip, APPInfo
 
+class IndexView(ListView):
+    context_object_name = 'apps'
+    queryset = APPInfo.objects.all()
+    template_name = 'city_viewer/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        return context
 
 class HomeView(ListView):
     context_object_name = 'cities'
