@@ -4,11 +4,7 @@ import os
 
 from configurations import Settings
 
-
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
-DOMAIN = 'cityapp.local'
-
-
 class Base(Settings):
 
     DATABASES = {
@@ -21,9 +17,9 @@ class Base(Settings):
             'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         }
     }
+
     USE_SOUTH = True
 
-    DEFAULT_FROM_EMAIL = 'noreply@tukeq.com'.format(DOMAIN)
     INSTALLED_APPS = (
         'grappelli.dashboard',
         'grappelli',
@@ -36,7 +32,6 @@ class Base(Settings):
         'django.contrib.staticfiles',
         'django.contrib.admin',
         'django.contrib.admindocs',
-#        'django.contrib.gis',
         'dajaxice',
         'south',
         'django_extensions',
@@ -46,14 +41,14 @@ class Base(Settings):
         'easy_thumbnails',
         'filebrowser',
         'tinymce',
+        'rest_framework',
         'cityapp.apps.excel_handler',
         'cityapp.apps.city_viewer',
-        'rest_framework',
     )
-    TIME_ZONE = 'Asia/Shanghai'
+
+    TIME_ZONE = 'Etc/GMT-8'
+    USE_TZ = True
     LANGUAGE_CODE = 'zh-cn'
-    MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
-    MEDIA_URL = '/static/media/'
 
     MIDDLEWARE_CLASSES = (
         'django.middleware.common.CommonMiddleware',
@@ -86,19 +81,29 @@ class Base(Settings):
         'dajaxice.finders.DajaxiceFinder',
     )
 
-    ROOT_URLCONF = 'cityapp.urls'
-    SECRET_KEY = '@5ae)r=gfw20@+4x0^-wkdq&amp;jevw1lv6_%m!q(9cm5g5#%(x!2'
-    SERVER_EMAIL = 'robot@tukeq.com'.format(DOMAIN)
-    SITE_ID = 1
-    SETTINGS_MODULE = 'cityapp.settings'
     STATICFILES_DIRS = (
         os.path.join(PROJECT_ROOT, 'cityapp', 'static'),
     )
+
+    TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
+
+    DOMAIN = 'cityapp.local'
+    MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
+    MEDIA_URL = '/static/media/'
+
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
     STATIC_URL = '/static/'
-    TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
+
+
+    ROOT_URLCONF = 'cityapp.urls'
+    SECRET_KEY = '@5ae)r=gfw20@+4x0^-wkdq&amp;jevw1lv6_%m!q(9cm5g5#%(x!2'
+
+    SITE_ID = 1
+    SETTINGS_MODULE = 'cityapp.settings'
+
     USE_L10N = True
     USE_TZ = True
+
     WSGI_APPLICATION = 'cityapp.wsgi.application'
 
     # django-userena / django-guardian
@@ -115,6 +120,7 @@ class Base(Settings):
     USERENA_LANGUAGE_FIELD = 'zh_CN'
     USERENA_ACTIVATION_REQUIRED = False
 
+    #File browser
     DEFAULT_FILE_STORAGE = 'cityapp.utils.ASCIIFileSystemStorage'
     FILEBROWSER_DIRECTORY = 'uploads/'
     FILEBROWSER_MAX_UPLOAD_SIZE = 52428800
@@ -128,8 +134,6 @@ class Base(Settings):
         }
     FILEBROWSER_VERSIONS_BASEDIR = 'images/'
 
-    TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
-    TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")
     TINYMCE_DEFAULT_CONFIG = {
         'plugins': "table,spellchecker,paste,searchreplace",
         'theme': "advanced",
@@ -150,8 +154,25 @@ class Base(Settings):
             )
     }
 
+    TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
+    TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")
+    
 class LocalDev(Base):
     DATABASES = Base.DATABASES
     DEBUG = True
     INTERNAL_IPS = ('127.0.0.1',)
     TEMPLATE_DEBUG = True
+
+class Prod(Base):
+    DATABASES = Base.DATABASES
+    DEBUG = False
+
+    DOMAIN = 'cityapps.tukeq.com'
+    MEDIA_ROOT = 'static/media/'
+    MEDIA_URL = 'static/media/'
+
+    STATIC_ROOT = 'static/'
+    STATIC_URL = '/static/'
+
+    TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
+    TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")
