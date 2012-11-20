@@ -6,8 +6,6 @@
 *.egg-info
 
 #django static
-#cityapp/static/*
-#cityapp/media/*
 static/*
 .static
 
@@ -19,4 +17,7 @@ static/*
 *.DS_Store
 
 #logs
-.logs
+logs/
+
+#pid
+*.pid
