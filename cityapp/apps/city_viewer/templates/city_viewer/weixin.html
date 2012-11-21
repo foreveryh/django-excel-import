@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>途客圈城市指南</title>
+</head>
+<body>
+{% if isappinstalled %}
+<a href="wx2dbcd635ef7b6737://cityapp.tukeq/open?sid={{ place.id }}">查看更多来自「{{ place.in_area.zh_name }}途客指南」的精彩内容 ></a>
+{% else %}
+<a href="{{ aslink }}">下载「{{ place.in_area.zh_name }}途客指南」</a>
+{% endif %}
+</body>
+</html>
