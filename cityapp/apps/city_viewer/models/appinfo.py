@@ -35,30 +35,38 @@ class APPDevice(models.Model):
         return self.identifier
 
 class APPLikeManager(models.Manager):
-    def liked_num(self, area):
-        return  self.filter(area=area).count()
+    def liked_num(self, app):
+        return  self.filter(app=app).count()
 
 class APPLike(models.Model):
     class Meta:
         app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('喜欢查看')
 
-    area = models.ForeignKey(Area, verbose_name=_('城市'))
+    app = models.ForeignKey(APPInfo, verbose_name=_('App'))
     device = models.ForeignKey(APPDevice, verbose_name=_('设备'))
-    create_at = CreationDateTimeField()
+    created_at = CreationDateTimeField()
     objects = APPLikeManager()
 
     def __unicode__(self):
-        return self.area.zh_name
+        return self.app.name
+
+class APPInstallManager(models.Manager):
+    def device_num(self, app):
+        return  self.filter(app=app).count()
+
+    def app_num(self, device):
+        return self.filter(device=device).count()
 
 class APPInstall(models.Model):
     class Meta:
         app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('安装查看')
 
-    area = models.ForeignKey(Area, verbose_name=_('城市'))
+    app = models.ForeignKey(APPInfo, verbose_name=_('APP'))
     device = models.ForeignKey(APPDevice, verbose_name=_('设备'))
-    create_at = CreationDateTimeField()
+    created_at = CreationDateTimeField()
+    objects = APPInstallManager()
 
     def __unicode__(self):
-        return self.area.zh_name
+        return self.app.name

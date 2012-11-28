@@ -19,7 +19,7 @@ class Area(models.Model):
     author = models.ForeignKey(User, verbose_name=_('负责人'))
     author_desc = models.TextField(_('关于作者'))
     hotel_link = models.URLField(_('酒店链接'), verify_exists=True)
-    create_at = CreationDateTimeField()
+    created_at = CreationDateTimeField()
     def __unicode__(self):
         return self.zh_name
 

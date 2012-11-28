@@ -18,7 +18,7 @@ class Picture(models.Model):
     desc = models.CharField(_('描述'), max_length=255, blank=True)
     in_place = models.ForeignKey(Place, verbose_name=_('地名'))
     weight = models.SmallIntegerField(_('权重'), default=0)
-    create_at = CreationDateTimeField()
+    created_at = CreationDateTimeField()
 
     def __unicode__(self):
         return self.file_name

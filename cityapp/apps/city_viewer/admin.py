@@ -46,16 +46,24 @@ class OfflineMapAdmin(GuardedModelAdmin):
     pass
 
 class APPInfoAdmin(GuardedModelAdmin):
-    pass
+    list_display = ('name', 'area', 'sell_date', 'liked_num', 'installed_num')
 
-class APPDeviceAdmin(GuardedModelAdmin):
-    pass
+    def liked_num(self, obj):
+        return APPLike.objects.liked_num(obj.area)
+    liked_num.short_description = '喜欢数'
 
-class APPLikeAdmin(GuardedModelAdmin):
-    pass
+    def installed_num(self, obj):
+        return APPInstall.objects.device_num(obj.area)
+    installed_num.short_description = '安装数'
 
 class APPReviewAdmin(GuardedModelAdmin):
-    pass
+    list_display = ('title', 'app', 'content', 'contact', 'ip_address', 'source', 'created_at')
+    list_filter = (
+        ('app'),
+    )
+
+class APPInstallAdmin(GuardedModelAdmin):
+    list_display = ('device',)
 
 
 admin.site.register(Area, AreaAdmin)
@@ -65,6 +73,5 @@ admin.site.register(Picture, PictureAdmin)
 admin.site.register(TripTip, TripTipAdmin)
 admin.site.register(OfflineMap, OfflineMapAdmin)
 admin.site.register(APPInfo, APPInfoAdmin)
-admin.site.register(APPDevice, APPDeviceAdmin)
-admin.site.register(APPLike, APPLikeAdmin)
 admin.site.register(APPReview, APPReviewAdmin)
+admin.site.register(APPInstall, APPInstallAdmin)

@@ -1,15 +1,16 @@
 from __future__ import unicode_literals
+import datetime
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike, APPDevice, APPReview
+from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike, APPDevice, APPReview, APPInstall
 from cityapp.apps.city_viewer.utils import spherical_distance
 
 @api_view(['GET'])
-#@authentication_classes((BasicAuthentication,))
-#@permission_classes((IsAuthenticated,))
+@authentication_classes((BasicAuthentication,))
+@permission_classes((IsAuthenticated,))
 def app_metadata(request, name):
     """
     return meta info of an area
@@ -40,7 +41,7 @@ def app_metadata(request, name):
 
 @api_view(['GET'])
 @authentication_classes((BasicAuthentication,))
-@permission_classes((IsAuthenticated,))
+@permission_classes((AllowAny,)) #IsAuthenticated,))
 def app_links(request,name):
     """
     Apps Exchange Links
@@ -48,7 +49,7 @@ def app_links(request,name):
     try:
         from_coord = OfflineMap.objects.get(in_area__en_name=name).center
         zh_name = Area.objects.get(en_name=name).zh_name
-        apps = APPInfo.objects.all().exclude(area__en_name=name)
+        apps = APPInfo.objects.filter(sell_date__lt=datetime.datetime.now()).exclude(area__en_name=name)
         result = {}
         cityapps = []
         for app in apps:
@@ -83,11 +84,17 @@ def install_me(request, name):
         system = request.DATA['system']
         platform = request.DATA['platform']
         device = APPDevice.objects.get(identifier=device_id)
-        return Response(status=status.HTTP_409_CONFLICT)
     except APPDevice.DoesNotExist:
         device = APPDevice(identifier=device_id, system=system, platform=platform)
         device.save()
+
+    try:
+        app = APPInfo.objects.get(area__en_name=name)
+        install_me = APPInstall(app=app, device=device)
+        install_me.save()
         return Response(status=status.HTTP_201_CREATED)
+    except APPInfo.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 @authentication_classes((BasicAuthentication,))
@@ -99,11 +106,10 @@ def add_device_token(request, name):
     try:
         device_id = request.DATA['device']
         device_token = request.DATA['token']
-        area = Area.objects.get(en_name=name)
         device = APPDevice.objects.get(identifier=device_id)
         print device_token
         return Response(status=status.HTTP_201_CREATED)
-    except Area.DoesNotExist:
+    except APPInfo.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except APPDevice.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -117,12 +123,12 @@ def like_me(request, name):
     """
     try:
         device_id = request.DATA['device']
-        area = Area.objects.get(en_name=name)
+        app = APPInfo.objects.get(area__en_name=name)
         device = APPDevice.objects.get(identifier=device_id)
-        like = APPLike(area=area, device=device)
+        like = APPLike(app=app, device=device)
         like.save()
         return Response(status=status.HTTP_201_CREATED)
-    except Area.DoesNotExist:
+    except APPInfo.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except APPDevice.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -135,17 +141,33 @@ def feedback(request, name):
     App Feedback
     """
     try:
-        area = Area.objects.get(en_name=name)
+        app = APPInfo.objects.get(area__en_name=name)
         data = request.DATA
         device_id = data['device']
         contact = data['contact']
         ip_address = data['ip']
         content = data['content'].encode('utf-8')
         device = APPDevice.objects.get(identifier=device_id)
-        review = APPReview(area=area, device=device, content=content, contact=contact, ip_address=ip_address)
+        review = APPReview(app=app, device=device, content=content, contact=contact, ip_address=ip_address)
         review.save()
         return Response(status=status.HTTP_201_CREATED)
     except Area.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except APPDevice.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def feedback_via_web(request):
+    """
+    Web Feedback
+    """
+    try:
+        data = request.DATA
+        content = data['content']
+        contact = data['contact']
+        review = APPReview(content=content, contact=contact, source='WEB')
+        review.save()
+        return Response(status=status.HTTP_201_CREATED)
+    except Exception:
+        return Response(status=status.HTTP_400_BAD_REQUEST)

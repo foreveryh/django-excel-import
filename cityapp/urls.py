@@ -9,7 +9,8 @@ import tinymce
 from cityapp.apps.excel_handler.views import ImportExcel
 from cityapp.apps.city_viewer.views import CityViewerView, IndexView, HomeView,\
     TripTipView, AboutMeView, WeixinView
-from cityapp.apps.city_viewer.api import app_metadata, app_links, like_me, install_me, feedback, add_device_token
+from cityapp.apps.city_viewer.api import app_metadata, app_links, like_me, \
+    install_me, feedback, feedback_via_web, add_device_token
 
 dajaxice_autodiscover()
 admin.autodiscover()
@@ -27,6 +28,7 @@ urlpatterns += patterns('',
     url('^api/(?P<name>\w+)/info/$', app_metadata),
     url('^api/(?P<name>\w+)/links/$', app_links),
     url('^api/(?P<name>\w+)/feedback/$', feedback),
+    url('^api/feedback/$',feedback_via_web),
     url('^api/(?P<name>\w+)/likeme/$', like_me),
     url('^api/(?P<name>\w+)/installme/$', install_me),
     url('^api/(?P<name>\w+)/devicetoken/$', add_device_token)
