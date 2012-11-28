@@ -1,13 +1,125 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>途客圈城市指南</title>
-</head>
-<body>
-{% if isappinstalled %}
-<a href="com.tukeq.city.{{ place.in_area.en_name }}://cityapp.tukeq/open?sid={{ place.id }}">查看更多来自「{{ place.in_area.zh_name }}途客指南」的精彩内容 ></a>
-{% else %}
-<a href="{{ aslink }}">下载「{{ place.in_area.zh_name }}途客指南」</a>
-{% endif %}
-</body>
-</html>
+{% extends "city_viewer/mobibase.html" %}
+{% block title %}
+    {{ place.zh_name }}
+{% endblock %}
+{% block head %}
+<style type="text/css" media="screen">
+    body{
+        font-size: 12px;
+        color: #666;
+        font-family: "Hiragino Sans GB";
+        background: #eeeeee;
+        text-shadow: 0 1px #fff;
+        margin: 0;
+    }
+    a{
+        color: #666;
+        text-decoration: none;
+    }
+    .container{
+        padding: 15px;
+    }
+    .img-panel{
+        width: 290px;
+        height: 216px;
+        overflow: hidden;
+        margin: 0 auto;
+        -webkit-box-shadow:0 1px #fff;
+        -moz-box-shadow: 0 1px #fff;
+        box-shadow: 0 1px #fff;
+        background-color: #fff;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+    #spot_pic {
+        width: 290px;
+        height: 216px;
+    }
+    h1 {
+        font-size: 18px;
+        font-weight: normal;
+        margin: 15px 0;
+    }
+    img{
+        border: 0;
+    }
+    p{
+        margin: 0 0 15px 0 ;
+    }
+    .line{
+        height: 0;
+        border-bottom: 1px solid white;
+        border-top: 1px solid #DDD;
+        margin: 0 0 15px;
+    }
+    .app-from{
+        overflow: hidden;
+    }
+    .app-from .app-icon{
+        float: left;
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+    }
+    .app-from .app-icon img{
+        width: 50px;
+        height: 50px;
+    }
+    .app-from .btn{
+        float: left;
+        margin:6px 0 0 0 ;
+        width: 221px;
+        height: 35px;
+        line-height: 35px;
+        text-align: center;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        background-color: #e8e8e8;
+        -webkit-box-shadow: 0 2px rgba(253,253,253,.75);
+        -moz-box-shadow: 0 2px rgba(253,253,253,.75);
+        box-shadow: 0 2px rgba(253,253,253,.75);
+        border: solid 1px #ccc;
+        background-image: -webkit-linear-gradient(bottom, #cdcdcd, #e4e4e4 12%, #fff 93%, #e5e5e5);
+        background-image: -moz-linear-gradient(bottom, #cdcdcd, #e4e4e4 12%, #fff 93%, #e5e5e5);
+        background-image: -o-linear-gradient(bottom, #cdcdcd, #e4e4e4 12%, #fff 93%, #e5e5e5);
+        background-image: -ms-linear-gradient(bottom, #cdcdcd, #e4e4e4 12%, #fff 93%, #e5e5e5);
+        background-image: linear-gradient(to top, #cdcdcd, #e4e4e4 12%, #fff 93%, #e5e5e5);
+    }
+    .app-from .btn .no-install{
+        font-size: 20px;
+        color: #2d88ee;
+        text-shadow: 0 2px #fff;
+    }
+    .app-from .btn .installed{
+        font-family: "Heiti SC";
+        font-size: 20px;
+        color: #999;
+        text-shadow: 0 2px #fff;
+    }
+    {% comment %}
+    /* Template specific CSS */
+    {% endcomment %}
+    {% block extracss %}
+    {% endblock %}
+</style>
+{% endblock %}
+{% block content %}
+    <div class="img-panel">
+        <img id="spot_pic" src="{{ place.picture_set.all.0.url }}"/>
+    </div>
+    <h1>{{ place.zh_name }}</h1>
+    <p>{{ place.short_desc }}</p>
+    <p class="line"></p>
+    <div class="app-from">
+        <div class="app-icon">
+            <img src='http://cityapps.tukeq.com/static/media/uploads/appicons/icon%402x.png' title=""/>
+        </div>
+        {% if isappinstalled %}
+        <div class="btn"><a class="no-install" href="com.tukeq.city.{{ place.in_area.en_name }}://cityapp.tukeq/open?sid={{ place.id }}">查看更多精彩内容 ></a></div>
+        {% else %}
+        <div class="btn"><a class="installed" href="{{ aslink }}">下载「{{ place.in_area.zh_name }}」</a></div>
+        {% endif %}
+    </div>
+{% endblock%}

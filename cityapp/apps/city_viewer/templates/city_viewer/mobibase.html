@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}城市系列App{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="nocache">
+    <meta http-equiv="Expires" content="-1">
+    {% block meta %}{% endblock %}
+    <style type="text/css" media="screen">
+        body{
+            background: #eeeeee;
+        }
+        .img-panel{
+        }
+        #spot_pic {
+            widht: 290px;
+            height: 216px;
+            background-color: #fff;
+            -webkit-box-shadow:0 1px #fff;
+            -moz-box-shadow: 0 1px #fff;
+            box-shadow: 0 1px #fff;
+        }
+        h1 {
+            font-family: "Hiragino Sans GB";
+            text-shadow: 0 1px #fff;
+        }
+        {% comment %}
+        /* Template specific CSS */
+        {% endcomment %}
+        {% block extracss %}
+        {% endblock %}
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block container %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    {% endblock %}
+    {% block scripts %}
+    {% endblock %}
+<!-- Finally, a script tag! -->
+    <script>
+    /* document.ready */
+    $(document).ready(function() {
+        {% block ready %}
+        {% endblock %}
+    })
+    /* Javascript functions, etc. */
+    {% block script %}
+    {% endblock %}
+</script>
+</body>
+</html>

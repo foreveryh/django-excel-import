@@ -82,13 +82,31 @@ def install_me(request, name):
         device_id = request.DATA['device']
         system = request.DATA['system']
         platform = request.DATA['platform']
-        print device_id
         device = APPDevice.objects.get(identifier=device_id)
         return Response(status=status.HTTP_409_CONFLICT)
     except APPDevice.DoesNotExist:
         device = APPDevice(identifier=device_id, system=system, platform=platform)
         device.save()
         return Response(status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@authentication_classes((BasicAuthentication,))
+@permission_classes((IsAuthenticated,))
+def add_device_token(request, name):
+    """
+    Notification
+    """
+    try:
+        device_id = request.DATA['device']
+        device_token = request.DATA['token']
+        area = Area.objects.get(en_name=name)
+        device = APPDevice.objects.get(identifier=device_id)
+        print device_token
+        return Response(status=status.HTTP_201_CREATED)
+    except Area.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except APPDevice.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 @authentication_classes((BasicAuthentication,))
@@ -131,4 +149,3 @@ def feedback(request, name):
         return Response(status=status.HTTP_404_NOT_FOUND)
     except APPDevice.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-

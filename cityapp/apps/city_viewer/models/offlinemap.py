@@ -23,3 +23,5 @@ class OfflineMap(models.Model):
 
     def __unicode__(self):
         return self.in_area.zh_name
+
+
