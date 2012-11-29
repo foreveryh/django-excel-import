@@ -93,6 +93,7 @@ h2{
 /* Stamp flying all around */
 
 #stamp{
+    z-index: 10000;
     left: 45%;
     position: absolute;
     top: 80%;
@@ -143,6 +144,25 @@ h2{
     background-size: cover;
 }
 
+#galleria-container{
+    width: 218px;
+    height: 387px;
+    margin: 68px 17px 0;
+    border: 1px #ffffff solid;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#galleria-container div{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#galleria-container img{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
 
 #start{
     background-image:url(images/Slide1_down.png);
@@ -157,9 +177,6 @@ h2{
     left: 30%;
     display:block;
     position:absolute;
-}
-#section-1 .footer{
-    background: url(images/Slide1_Footer.png) repeat-x center bottom;
 }
 
 /******************************
@@ -730,53 +747,61 @@ h2{
 #section-7 a {
     display:block;
 }
-
-#app-show {
-    display: block;
-    left: 50%;
-    margin-left: -318px;
-    margin-top:-70px;
+.app-container{
     position: absolute;
     top: 50%;
-    width: 646px;
+    left: 50%;
+    width: 480px;
+    height: 260px;
+    margin-left: -240px;
+    margin-top:-70px;
+}
+#app-show {
+    width: 480px;
     height:260px;
 }
 
 #scroll-left{
+    position: absolute;
+    top: 90px;
+    left: -60px;
     background: url(images/Slide7_left_arrow.png) 0 0 no-repeat;
     width:23px;
     height:38px;
-    margin-right: 60px;
-    margin-top: 91px;
-    float:left;
 }
 
 #scroll-right{
+    position: absolute;
+    top: 90px;
+    left: 500px;
     background: url(images/Slide7_right_arrow.png) 0 0 no-repeat;
     width:23px;
     height:38px;
-    margin-left: 40px;
-    margin-top: 91px;
-    float:right;
+}
+#scroll-right a,#scroll-left a{
+    width:23px;
+    height:38px;
 }
 
-#scroll-btn a:hover{
+#scroll-left:hover,#scroll-right:hover{
     -moz-box-shadow: 0 24px 20px -16px rgba(0,0,0,0.2);
     -webkit-box-shadow: 0 24px 30px -16px rgba(0,0,0,0.2);
     box-shadow: 0 24px 30px -16px rgba(0,0,0,0.2);
 }
 
-#app-icon{
-    width:460px;
+.app-icons{
+    width: 480px;
+    height: 260px;
+    overflow: hidden;
 }
 
-#app-icons li {
+.app-icons div {
     float:left;
     margin-right: 20px;
     margin-bottom: 20px;
 }
 
-#app-icons li img:hover {
+.app-icons div img:hover {
     -moz-box-shadow: 0 24px 20px -16px rgba(0,0,0,0.2);
     -webkit-box-shadow: 0 24px 30px -16px rgba(0,0,0,0.2);
     box-shadow: 0 24px 30px -16px rgba(0,0,0,0.2);
