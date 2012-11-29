@@ -4,6 +4,6 @@ from topics import Topic
 from places import Place
 from pictures import Picture
 from triptip import TripTip
-from appinfo import APPInfo, APPLike, APPInstall, APPDevice
+from appinfo import APPInfo, APPLike, APPInstall, APPDevice, APPDeviceToken
 from appreview import APPReview
 from offlinemap import OfflineMap

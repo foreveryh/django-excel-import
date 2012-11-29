@@ -22,6 +22,7 @@ class APPInfo(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class APPDevice(models.Model):
     class Meta:
         app_label = 'city_viewer'
@@ -34,9 +35,19 @@ class APPDevice(models.Model):
     def __unicode__(self):
         return self.identifier
 
+
+class APPDeviceToken(models.Model):
+    class Meta:
+        app_label = 'city_viewer'
+        verbose_name = verbose_name_plural = _('设备Token')
+    token = models.CharField(max_length=100)
+    device = models.ForeignKey(APPDevice, verbose_name=_('设备'))
+
+
 class APPLikeManager(models.Manager):
     def liked_num(self, app):
         return  self.filter(app=app).count()
+
 
 class APPLike(models.Model):
     class Meta:
@@ -51,12 +62,14 @@ class APPLike(models.Model):
     def __unicode__(self):
         return self.app.name
 
+
 class APPInstallManager(models.Manager):
     def device_num(self, app):
         return  self.filter(app=app).count()
 
     def app_num(self, device):
         return self.filter(device=device).count()
+
 
 class APPInstall(models.Model):
     class Meta:

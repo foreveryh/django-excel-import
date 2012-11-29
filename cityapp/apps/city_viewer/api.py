@@ -6,8 +6,10 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike, APPDevice, APPReview, APPInstall
+from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike,\
+    APPDevice, APPReview, APPInstall, APPDeviceToken
 from cityapp.apps.city_viewer.utils import spherical_distance
+from ios_notifications.models import Device
 
 @api_view(['GET'])
 @authentication_classes((BasicAuthentication,))
@@ -116,9 +118,10 @@ def add_device_token(request, name):
     """
     try:
         device_id = request.DATA['device']
-        device_token = request.DATA['token']
+        token = request.DATA['token']
         device = APPDevice.objects.get(identifier=device_id)
-        print device_token
+        device_token = APPDeviceToken(device=device, token=token)
+        device_token.save()
         return Response(status=status.HTTP_201_CREATED)
     except APPInfo.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
