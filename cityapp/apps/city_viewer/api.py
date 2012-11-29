@@ -62,7 +62,7 @@ def app_links(request,name):
             distance = spherical_distance(from_coord.split(','), to_coord.split(','))
             dict.update({'name': app.name})
             dict.update({'app': app.area.en_name})
-            dict.update({'desc': '%s %0.1f'% (zh_name, distance)})
+            dict.update({'desc': '距离%s有%0.1f公里' % (zh_name, distance/1000)})
             dict.update({'icon': app.icon.url})
             dict.update({'link': app.link})
             cityapps.append(dict)
