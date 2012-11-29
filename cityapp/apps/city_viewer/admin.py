@@ -104,8 +104,14 @@ class APPReviewAdmin(GuardedModelAdmin):
 
 
 class APPInstallAdmin(GuardedModelAdmin):
-    list_display = ('device',)
+    list_display = ('device', 'app', 'created_at')
+    list_filter = (
+        ('app'),
+    )
 
+
+class APPDeviceTokenAdmin(GuardedModelAdmin):
+    list_display = ('device', 'token')
 
 admin.site.register(Area, AreaAdmin)
 admin.site.register(Place, PlaceAdmin)
@@ -116,3 +122,4 @@ admin.site.register(OfflineMap, OfflineMapAdmin)
 admin.site.register(APPInfo, APPInfoAdmin)
 admin.site.register(APPReview, APPReviewAdmin)
 admin.site.register(APPInstall, APPInstallAdmin)
+admin.site.register(APPDeviceToken, APPDeviceTokenAdmin)
