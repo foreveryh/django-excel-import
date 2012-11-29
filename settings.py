@@ -42,6 +42,7 @@ class Base(Settings):
         'filebrowser',
         'tinymce',
         'rest_framework',
+        'ios_notifications',
         'cityapp.apps.excel_handler',
         'cityapp.apps.city_viewer',
     )

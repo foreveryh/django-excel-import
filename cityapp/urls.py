@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/pics/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^ios-notifications/', include('ios_notifications.urls')),
 )
 urlpatterns += patterns('',
     url('^api/(?P<name>\w+)/info/$', app_metadata),
