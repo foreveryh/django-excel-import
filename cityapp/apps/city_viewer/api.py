@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 from __future__ import unicode_literals
 import datetime
 from rest_framework import status
@@ -41,7 +42,7 @@ def app_metadata(request, name):
 
 @api_view(['GET'])
 @authentication_classes((BasicAuthentication,))
-@permission_classes((AllowAny,)) #IsAuthenticated,))
+@permission_classes((IsAuthenticated,)) #AllowAny,))
 def app_links(request,name):
     """
     Apps Exchange Links
@@ -64,7 +65,17 @@ def app_links(request,name):
             dict.update({'link': app.link})
             cityapps.append(dict)
         result['cityapps'] = cityapps
-        result['others'] = []
+        result['others'] = [{'name': '途客圈-旅行助手',
+                             'app': 'tukeq',
+                             'desc': '环球景点大全',
+                             'icon': '/static/media/uploads/appicons/tukeq.png',
+                             'link': 'http://itunes.apple.com/cn/app/tu-ke-quan-huan-qiu-lu-xing/id518219968?mt=8'},
+                            {'name': '欧铁时刻表',
+                             'app': 'eurail',
+                             'desc': '做火车畅游欧洲必备',
+                             'icon': '/static/media/uploads/appicons/eurail.png',
+                             'link': 'http://itunes.apple.com/us/app/ou-zhou-huo-che-shi-ke-biao/id552860920?ls=1&mt=8'},
+                            ]
         return Response(result)
     except Area.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)

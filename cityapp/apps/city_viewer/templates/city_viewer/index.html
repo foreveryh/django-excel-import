@@ -26,7 +26,7 @@
                  <div id="app-title">
                  <h2>途客圈</h2>
                     <h1>城市指南</h1>
-                    <p id="introduction">已有<span style="font-size:22px;"> 8 </span>款登陆 App Store</p>
+                    <!-- <p id="introduction">已有<span style="font-size:22px;"> {{ apps.count }} </span>款登陆 App Store</p>-->
                 </div>
                 <div id="iphone">
                     <div id="galleria-container">
@@ -129,13 +129,8 @@
                                 {% endfor %}
                             </div>
                         </li>
-                        <li>
-                            <div class="app-icons">
-                                {% for app in apps %}
-                                    <div><a href="{{ app.link }}" target="_blank"><img src="{{ app.icon.url }}" width="100px" height="100px"/></a></div>
-                                {% endfor %}
-                            </div>
-                        </li>
+                    {% comment %}
+                    {% endcomment %}
                     </ul>
                 </div>
             </div>
