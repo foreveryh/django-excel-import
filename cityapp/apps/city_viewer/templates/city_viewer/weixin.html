@@ -114,7 +114,7 @@
     <p class="line"></p>
     <div class="app-from">
         <div class="app-icon">
-            <img src='http://cityapps.tukeq.com/static/media/uploads/appicons/icon%402x.png' title=""/>
+            <img src='{{ icon }}' title="{{ name }}"/>
         </div>
         {% if isappinstalled %}
         <div class="btn"><a class="no-install" href="com.tukeq.city.{{ place.in_area.en_name }}://cityapp.tukeq/open?sid={{ place.id }}">查看更多精彩内容 ></a></div>

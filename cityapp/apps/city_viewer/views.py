@@ -60,6 +60,8 @@ class WeixinView(DetailView):
             try:
                 app = APPInfo.objects.get(area=self.area)
                 context['aslink'] = app.link
+                context['icon'] = app.icon.url
+                context['name'] = app.name
             except APPInfo.DoesNotExist:
                 context['aslink'] = u'http://cityapps.tukeq.com/'
         else:
