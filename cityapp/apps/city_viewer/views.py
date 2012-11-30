@@ -54,14 +54,19 @@ class WeixinView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(WeixinView, self).get_context_data(**kwargs)
-        isappinstalled = self.request.GET['isappinstalled']
+        if 'isappinstalled' in self.request.GET:
+            isappinstalled = self.request.GET['isappinstalled']
+        else:
+            isappinstalled = '0'
+
+        app = APPInfo.objects.get(area=self.area)
+        context['icon'] = app.icon.url
+        context['name'] = app.name
+
         if isappinstalled != '1':
             context['isappinstalled'] = False
             try:
-                app = APPInfo.objects.get(area=self.area)
                 context['aslink'] = app.link
-                context['icon'] = app.icon.url
-                context['name'] = app.name
             except APPInfo.DoesNotExist:
                 context['aslink'] = u'http://cityapps.tukeq.com/'
         else:
