@@ -14,7 +14,7 @@ class Picture(models.Model):
 
     id = UUIDField(primary_key=True)
     file_name = models.CharField(_('文件名'), max_length=50)
-    url = models.CharField(_('地址'), max_length=255, help_text='/static/media/uploads/cityname/fielname')
+    url = models.CharField(_('地址'), max_length=255, help_text='/static/media/uploads/cityname/filename')
     desc = models.CharField(_('描述'), max_length=255, blank=True)
     in_place = models.ForeignKey(Place, verbose_name=_('地名'))
     weight = models.SmallIntegerField(_('权重'), default=0)
