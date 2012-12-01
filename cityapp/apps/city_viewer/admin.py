@@ -88,11 +88,11 @@ class APPInfoAdmin(GuardedModelAdmin):
     list_display = ('name', 'area', 'sell_date', 'liked_num', 'installed_num')
 
     def liked_num(self, obj):
-        return APPLike.objects.liked_num(obj.area)
+        return APPLike.objects.liked_num(obj)
     liked_num.short_description = '喜欢数'
 
     def installed_num(self, obj):
-        return APPInstall.objects.device_num(obj.area)
+        return APPInstall.objects.device_num(obj)
     installed_num.short_description = '安装数'
 
 

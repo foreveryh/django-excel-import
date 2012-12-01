@@ -21,8 +21,8 @@ def app_metadata(request, name):
     try:
         area = Area.objects.get(en_name = name)
         offline = OfflineMap.objects.get(in_area=area)
-        appinfo = APPInfo.objects.get(area=area)
-        response = {'liked_num': 100 + APPLike.objects.liked_num(area),
+        app = APPInfo.objects.get(area=area)
+        response = {'liked_num': 100 + APPLike.objects.liked_num(app),
                     'author_name': area.author.get_profile().name,
                     'author_desc': area.author_desc,
                     'map_size': offline.file.size,
@@ -31,7 +31,8 @@ def app_metadata(request, name):
                     'map_zoom': offline.zoom,
                     'map_min_zoom':offline.min_zoom,
                     'map_max_zoom':offline.max_zoom,
-                    'latest_ver':appinfo.latest_ver,
+                    'rating_url':app.link,
+                    'latest_ver':app.latest_ver,
                     }
         return Response(response)
     except Area.DoesNotExist:
