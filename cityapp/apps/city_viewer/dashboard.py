@@ -61,7 +61,7 @@ class CityAppDashboard(Dashboard):
             css_classes=('collapse closed',),
             models=(
                 PREFIX + 'areas.Area',
-                PREFIX + 'toics.Topic',
+                PREFIX + 'topics.Topic',
                 PREFIX + 'places.Place',
                 PREFIX + 'triptip.TripTip',
                 PREFIX + 'pictures.Picture',
