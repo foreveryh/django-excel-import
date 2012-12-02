@@ -34,6 +34,7 @@ class CityAppDashboard(Dashboard):
             models=(
                 PREFIX + 'appinfo.APPInfo',
                 PREFIX + 'appreview.APPReview',
+                PREFIX + 'appinfo.APPDevice',
             )
         ))
 
@@ -63,8 +64,9 @@ class CityAppDashboard(Dashboard):
                 PREFIX + 'areas.Area',
                 PREFIX + 'topics.Topic',
                 PREFIX + 'places.Place',
-                PREFIX + 'triptip.TripTip',
                 PREFIX + 'pictures.Picture',
+                PREFIX + 'triptip.TripTip',
+                PREFIX + 'offlinemap.OfflineMap'
                 )
         ))
 
