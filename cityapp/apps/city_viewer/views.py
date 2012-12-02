@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import Http404
-from django.views.generic import ListView, TemplateView, DetailView
+from django.http import Http404, HttpResponseRedirect
+from django.views.generic import ListView, TemplateView, DetailView, View
 from django.contrib.auth.models import User
-from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip, APPInfo
+from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip, APPInfo, Channel, ClickStat
 
 class IndexView(ListView):
     context_object_name = 'apps'
@@ -93,3 +93,28 @@ class AboutMeView(TemplateView):
         context = super(AboutMeView, self).get_context_data(**kwargs)
         context['author'] = User.objects.get(username=kwargs['author']).get_profile()
         return context
+
+class ChannelView(View):
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    def get(self, request, *args, **kwargs):
+        city_name = kwargs['city']
+        cid = kwargs['cid']
+        try:
+            app = APPInfo.objects.get(area__en_name=city_name)
+            channel = Channel.objects.get(id=cid)
+            ip = self.get_client_ip(request)
+            click = ClickStat(channel=channel,ip=ip)
+            click.save()
+            return HttpResponseRedirect(app.link)
+        except APPInfo.DoesNotExist:
+            raise Http404(u'No area found matching the query')
+        except Channel.DoesNotExist:
+            raise Http404(u'No channel found matching the query')

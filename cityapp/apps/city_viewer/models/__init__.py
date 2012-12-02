@@ -7,3 +7,4 @@ from triptip import TripTip
 from appinfo import APPInfo, APPLike, APPInstall, APPDevice, APPDeviceToken
 from appreview import APPReview
 from offlinemap import OfflineMap
+from channels import Channel, ClickStat

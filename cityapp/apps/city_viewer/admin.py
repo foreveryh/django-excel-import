@@ -97,7 +97,7 @@ class APPInfoAdmin(GuardedModelAdmin):
 
 
 class APPReviewAdmin(GuardedModelAdmin):
-    list_display = ('title', 'app', 'content', 'contact', 'ip_address', 'source', 'created_at')
+    list_display = ('title', 'app', 'content', 'contact', 'ip', 'source', 'created_at')
     list_filter = (
         ('app'),
     )
@@ -113,6 +113,29 @@ class APPInstallAdmin(GuardedModelAdmin):
 class APPDeviceTokenAdmin(GuardedModelAdmin):
     list_display = ('device', 'token')
 
+
+class APPChannelAdmin(GuardedModelAdmin):
+    list_display = ('name', 'app', 'channel_url', 'click_num', 'created_at', 'click_fraud')
+
+    def channel_url(self, obj):
+        return obj.url
+
+    channel_url.short_description = '链接'
+
+    def click_num(self, obj):
+        return ClickStat.objects.filter(channel=obj).count()
+
+    click_num.short_description = '点击量'
+
+    def click_fraud(self, obj):
+        return ClickStat.objects.is_click_fraud(obj)
+
+    click_fraud.short_description = '恶意点击'
+
+class ClickStatAdmin(GuardedModelAdmin):
+    list_display = ('channel', 'ip', 'created_at')
+
+
 admin.site.register(Area, AreaAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Topic, TopicAdmin)
@@ -123,3 +146,5 @@ admin.site.register(APPInfo, APPInfoAdmin)
 admin.site.register(APPReview, APPReviewAdmin)
 admin.site.register(APPInstall, APPInstallAdmin)
 admin.site.register(APPDeviceToken, APPDeviceTokenAdmin)
+admin.site.register(Channel, APPChannelAdmin)
+admin.site.register(ClickStat, ClickStatAdmin)

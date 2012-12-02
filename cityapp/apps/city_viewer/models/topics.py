@@ -16,6 +16,7 @@ class Topic(models.Model):
     in_area = models.ForeignKey(Area, verbose_name=_("所属城市"))
     weight = models.SmallIntegerField()
     cover_pic = models.CharField(_('图片名'), max_length=100)
+
     def __unicode__(self):
         return '%s[%s]' % (self.name, self.in_area)
 

@@ -88,7 +88,7 @@ class Base(Settings):
 
     TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
 
-    DOMAIN = 'cityapp.local'
+    DOMAIN = 'cityapps.tukeq.com'
     MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', 'media')
     MEDIA_URL = '/static/media/'
 
@@ -144,7 +144,7 @@ class Base(Settings):
     }
 
     GRAPPELLI_ADMIN_TITLE = u'城市系列App管理后台'
-    GRAPPELLI_INDEX_DASHBOARD = 'cityapp.apps.city_viewer.dashboard.CustomIndexDashboard'
+    GRAPPELLI_INDEX_DASHBOARD = 'cityapp.apps.city_viewer.dashboard.CityAppDashboard'
 
     REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': (

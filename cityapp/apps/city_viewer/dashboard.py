@@ -13,41 +13,90 @@ from django.core.urlresolvers import reverse
 from grappelli.dashboard import modules, Dashboard
 from grappelli.dashboard.utils import get_admin_site_name
 
-from cityapp.apps.city_viewer.models import APPInfo, APPDevice, APPReview, APPInstall, APPLike
-from cityapp.apps.city_viewer.models import Area, Place, Picture, Topic, TripTip
+PREFIX = 'cityapp.apps.city_viewer.models.'
 
-class CustomIndexDashboard(Dashboard):
+class CityAppDashboard(Dashboard):
     """
     Custom index dashboard for www.
     """
-    
-    def init_with_context(self, context):
-        site_name = get_admin_site_name(context)
 
-        # append a group for "Administration" & "Applications"
-        self.children.append(modules.Group(
-            _('Group: Administration & Applications'),
-            column=1,
+    def init_with_context(self, context):
+        #site_name = get_admin_site_name(context)
+
+        self.children.append(modules.ModelList(
+            _('APP管理'),
+            pre_content='''
+
+            ''',
             collapsible=True,
-            children = [
-                modules.AppList(
-                    _('Administration'),
-                    column=1,
-                    collapsible=False,
-                    models=('django.contrib.*',),
-                ),
-                modules.AppList(
-                    _('Applications'),
-                    column=1,
-                    css_classes=('collapse closed',),
-                    exclude=('django.contrib.*',),
-                )
-            ]
+            column=1,
+            css_classes=('collapse closed',),
+            models=(
+                PREFIX + 'appinfo.APPInfo',
+                PREFIX + 'appreview.APPReview',
+            )
         ))
-        
+
+        self.children.append(modules.ModelList(
+            _('渠道管理'),
+            pre_content='''
+
+            ''',
+            collapsible=True,
+            column=1,
+            css_classes=('collapse closed',),
+            models=(
+                PREFIX + 'channels.Channel',
+                PREFIX + 'channels.ClickStat',
+                )
+        ))
+
+        self.children.append(modules.ModelList(
+            _('城市内容管理'),
+            pre_content='''
+
+            ''',
+            collapsible=True,
+            column=1,
+            css_classes=('collapse closed',),
+            models=(
+                PREFIX + 'areas.Area',
+                PREFIX + 'toics.Topic',
+                PREFIX + 'places.Place',
+                PREFIX + 'triptip.TripTip',
+                PREFIX + 'pictures.Picture',
+                )
+        ))
+
+        self.children.append(modules.ModelList(
+            _('管理用户'),
+            pre_content='''
+
+            ''',
+            collapsible=True,
+            column=1,
+            css_classes=('collapse closed',),
+            models= (
+                PREFIX + 'accounts.UserProfile',
+                )
+        ))
+
+        self.children.append(modules.AppList(
+            _('推送管理'),
+            column=1,
+            collapsible=False,
+            models=('ios_notifications.*',)
+        ))
+
+        self.children.append(modules.AppList(
+            _('系统管理员'),
+            column=1,
+            collapsible=False,
+            models=('django.contrib.*',),
+        ))
         # append another link list module for "support".
         self.children.append(modules.LinkList(
-            _('Media Management'),
+            _('上传图片管理'),
             column=2,
             children=[
                 {
@@ -57,10 +106,10 @@ class CustomIndexDashboard(Dashboard):
                 },
             ]
         ))
-        
+
         # append another link list module for "support".
         self.children.append(modules.LinkList(
-            _('Support'),
+            _('开发帮助'),
             column=2,
             children=[
                 {
@@ -73,25 +122,20 @@ class CustomIndexDashboard(Dashboard):
                     'url': 'http://packages.python.org/django-grappelli/',
                     'external': True,
                 },
-                {
-                    'title': _('Grappelli Google-Code'),
-                    'url': 'http://code.google.com/p/django-grappelli/',
-                    'external': True,
-                },
             ]
         ))
-        
+
         # append a feed module
         self.children.append(modules.Feed(
-            _('Latest Django News'),
+            _('最新评论'),
             column=2,
-            feed_url='http://www.djangoproject.com/rss/weblog/',
-            limit=5
+            feed_url='https://itunes.apple.com/cn/rss/customerreviews/id=577396339/sortBy=mostRecent/xml?l=en',
+            limit=10
         ))
-        
+
         # append a recent actions module
         self.children.append(modules.RecentActions(
-            _('Recent Actions'),
+            _('最近动作'),
             limit=5,
             collapsible=False,
             column=3,

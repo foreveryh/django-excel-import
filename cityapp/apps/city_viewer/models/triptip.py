@@ -17,5 +17,6 @@ class TripTip(models.Model):
     content = tinymce_models.HTMLField(verbose_name=_('内容'))
     in_area = models.ForeignKey(Area, verbose_name=_("所属城市"))
     weight = models.SmallIntegerField()
+
     def __unicode__(self):
         return '%s[%s]' % (self.title, self.in_area)

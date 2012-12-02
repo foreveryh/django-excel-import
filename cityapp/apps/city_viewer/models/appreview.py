@@ -20,7 +20,7 @@ class APPReview(models.Model):
     content = models.TextField(_('内容'))
     contact = models.CharField(_('联系方式'), max_length=100, blank=True)
     tracked = models.CharField(_('处理结果'), max_length=255, default='未处理')
-    ip_address = models.IPAddressField(blank=True, default='0.0.0.0')
+    ip = models.IPAddressField(blank=True, default='0.0.0.0')
     source = models.CharField(_('来源'), max_length=3, choices=SOURCE_CHOICES, default='APP')
     app = models.ForeignKey(APPInfo, verbose_name=_('APP'), blank=True, default='1')
     created_at = CreationDateTimeField()

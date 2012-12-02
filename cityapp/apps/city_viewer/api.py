@@ -160,10 +160,10 @@ def feedback(request, name):
         data = request.DATA
         device_id = data['device']
         contact = data['contact']
-        ip_address = data['ip']
+        ip = data['ip']
         content = data['content'].encode('utf-8')
         device = APPDevice.objects.get(identifier=device_id)
-        review = APPReview(app=app, device=device, content=content, contact=contact, ip_address=ip_address)
+        review = APPReview(app=app, device=device, content=content, contact=contact, ip=ip)
         review.save()
         return Response(status=status.HTTP_201_CREATED)
     except Area.DoesNotExist:
