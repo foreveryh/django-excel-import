@@ -13,8 +13,9 @@ class APPInfo(models.Model):
 
     name = models.CharField(_('名称'), max_length=50, unique=True)
     icon = models.ImageField(_('Icon'), upload_to='uploads/appicons/')
-    desc = models.TextField(_('App描述'), max_length=255)
+    desc = models.TextField(_('App描述'))
     link = models.URLField(_('App Store链接'), blank=True)
+    msg = models.CharField(_('APP消息'), max_length=100, blank=True)
     sell_date = models.DateField(_('上线时间'))
     latest_ver = models.CharField(_('最新版本'), max_length=3, default='1')
     area = models.ForeignKey(Area, verbose_name=_('城市'), blank=True, null=True, on_delete= models.SET_NULL)

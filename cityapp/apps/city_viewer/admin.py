@@ -85,7 +85,7 @@ class OfflineMapAdmin(GuardedModelAdmin):
 
 
 class APPInfoAdmin(GuardedModelAdmin):
-    list_display = ('name', 'area', 'sell_date', 'liked_num', 'installed_num')
+    list_display = ('name', 'area', 'liked_num', 'installed_num', 'sell_date', 'msg')
 
     def liked_num(self, obj):
         return APPLike.objects.liked_num(obj)

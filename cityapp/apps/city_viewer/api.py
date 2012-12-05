@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 from __future__ import unicode_literals
 import datetime
+from string import strip
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import BasicAuthentication
@@ -45,7 +46,7 @@ def app_metadata(request, name):
 
 @api_view(['GET'])
 @authentication_classes((BasicAuthentication,))
-@permission_classes((IsAuthenticated,)) #AllowAny,))
+@permission_classes((AllowAny,))#IsAuthenticated,))
 def app_links(request,name):
     """
     Apps Exchange Links
@@ -63,9 +64,12 @@ def app_links(request,name):
             distance = spherical_distance(from_coord.split(','), to_coord.split(','))
             dict.update({'name': app.name})
             dict.update({'app': app.area.en_name})
-            dict.update({'desc': '距离%s有%0.1f公里' % (zh_name, distance/1000)})
             dict.update({'icon': app.icon.url})
             dict.update({'link': app.link})
+            if app.msg and strip(app.msg) != '':
+                dict.update({'desc': strip(app.msg)})
+            else:
+                dict.update({'desc': '距离%s有%0.1f公里' % (zh_name, distance/1000)})
             cityapps.append(dict)
         result['cityapps'] = cityapps
         result['others'] = [{'name': '途客圈-旅行助手',
