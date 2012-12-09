@@ -14,6 +14,7 @@ class APPInfo(models.Model):
     name = models.CharField(_('名称'), max_length=50, unique=True)
     icon = models.ImageField(_('Icon'), upload_to='uploads/appicons/')
     desc = models.TextField(_('App描述'))
+    asid = models.CharField(_('App Store ID'), max_length=10, default='0')
     link = models.URLField(_('App Store链接'), blank=True)
     msg = models.CharField(_('APP消息'), max_length=100, blank=True)
     sell_date = models.DateField(_('上线时间'))

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
+from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import  ModificationDateTimeField, UUIDField
 from cityapp.apps.city_viewer.models import Topic
 from cityapp.apps.city_viewer.models import Area
-
 
 CATEGORY = ((1, _('景点')),
             (1<<1, _('餐厅')),
@@ -45,3 +45,22 @@ class Place(models.Model):
     def __unicode__(self):
         return '%s[%s]' % (self.zh_name, self.in_area)
 
+    def get_place_info(self):
+        info = {}
+        if self.full_desc:
+            info.update({"description": self.full_desc})
+        if self.address:
+            info.update({"address": self.address})
+        if self.open_time:
+            info.update({"openTime": self.open_time})
+        if self.traffic:
+            info.update({"arriveMethod": self.traffic})
+        if self.website:
+            info.update({"website": self.website})
+        if self.price:
+            info.update({"ticketInfo": self.price})
+        if self.tel:
+            info.update({"phoneNumber": self.tel})
+        if self.tips:
+            info.update({"tips": self.tips})
+        return simplejson.dumps(info)

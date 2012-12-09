@@ -36,7 +36,7 @@ class AreaAdmin(GuardedModelAdmin):
 
 
 class PlaceAdmin(GuardedModelAdmin):
-    list_display = ('zh_name', 'in_area', 'short_desc', 'full_desc', 'open_time', 'address', 'traffic', 'price', 'tel', 'website', 'tips')
+    list_display = ('zh_name', 'in_area', 'short_desc', 'full_desc', 'open_time', 'address', 'traffic', 'price', 'tel', 'website', 'tips', 'modified_at')
     list_filter = (
         ('in_area'),
     )
@@ -45,7 +45,7 @@ class PlaceAdmin(GuardedModelAdmin):
 
 
 class TopicAdmin(GuardedModelAdmin):
-    list_display = ('name', 'in_area', 'desc', 'place_num')
+    list_display = ('name', 'in_area', 'desc', 'place_num', 'modified_at')
     list_filter = (
         ('in_area'),
     )
@@ -85,7 +85,7 @@ class OfflineMapAdmin(GuardedModelAdmin):
 
 
 class APPInfoAdmin(GuardedModelAdmin):
-    list_display = ('name', 'area', 'liked_num', 'installed_num', 'sell_date', 'msg')
+    list_display = ('name', 'area', 'asid', 'liked_num', 'installed_num', 'sell_date', 'msg')
 
     def liked_num(self, obj):
         return APPLike.objects.liked_num(obj)
@@ -116,7 +116,9 @@ class APPDeviceTokenAdmin(GuardedModelAdmin):
 
 class APPChannelAdmin(GuardedModelAdmin):
     list_display = ('name', 'app', 'channel_url', 'click_num', 'created_at', 'click_fraud')
-
+    list_filter = (
+        ('app'),
+    )
     def channel_url(self, obj):
         return obj.url
 

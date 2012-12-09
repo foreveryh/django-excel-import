@@ -3,6 +3,7 @@
 import os
 import shutil
 import sqlite3
+from datetime import datetime
 from string import Template
 from django.conf import settings
 from django.utils import simplejson
@@ -65,6 +66,7 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
             meta.append({"key":"firsttime", "value":"no"})
             meta.append({"key":"hotel_link", "value":area.hotel_link})
             meta.append({"key":"links", "value":""})
+            meta.append({"key":"datetime", "value": datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
             try:
                 app_info = APPInfo.objects.get(area=area)
                 meta.append({"key":"rating_url", "value":app_info.link})
@@ -108,7 +110,7 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
             for place in places:
                 place.__dict__ = handle_single_quote(**place.__dict__)
                 info = generate_place_info(place)
-                print info
+                #print info
                 line = place_template.substitute(id=place.id, zh_name=place.zh_name, en_name=place.en_name, \
                     category=place.category, longitude=place.longitude, latitude=place.latitude, \
                     fit_time = place.fit_time, short_desc=place.short_desc, info=info).encode('utf-8')

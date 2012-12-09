@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django_extensions.db.fields import UUIDField
+from django_extensions.db.fields import UUIDField, ModificationDateTimeField
+from rest_framework import serializers
 from cityapp.apps.city_viewer.models import Area
 
 
@@ -16,7 +17,7 @@ class Topic(models.Model):
     in_area = models.ForeignKey(Area, verbose_name=_("所属城市"))
     weight = models.SmallIntegerField()
     cover_pic = models.CharField(_('图片名'), max_length=100)
+    modified_at = ModificationDateTimeField()
 
     def __unicode__(self):
         return '%s[%s]' % (self.name, self.in_area)
-

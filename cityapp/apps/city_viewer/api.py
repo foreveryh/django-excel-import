@@ -1,17 +1,46 @@
 #-*- coding:utf-8 -*-
 from __future__ import unicode_literals
-import datetime
+from datetime import datetime
 from string import strip
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike,\
-    APPDevice, APPReview, APPInstall, APPDeviceToken
+    APPDevice, APPReview, APPInstall, APPDeviceToken, Topic, Place, Picture
+from cityapp.apps.city_viewer.models.serializer import PlaceSerializer, TopicSerializer, PictureSerializer
 from cityapp.apps.city_viewer.utils import spherical_distance
 from ios_notifications.models import Device
 
+
+
+class ModifiedContentsList(generics.ListAPIView):
+    model = Topic
+    serializer_class = TopicSerializer
+    permission_classes = (AllowAny,)
+    area = None
+    datetime = None
+
+    def post(self, request, *args, **kwargs):
+        name = kwargs['name']
+        dt_str = request.POST['datetime']
+        self.datetime = datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S')
+        try:
+            self.area = Area.objects.get(en_name=name)
+            topics = Topic.objects.filter(in_area=self.area, modified_at__gt=self.datetime)
+            places = Place.objects.filter(in_area=self.area, modified_at__gt=self.datetime)
+            pictures = Picture.objects.filter(in_place__in=places, created_at__gt=self.datetime)
+            serializer_topic = TopicSerializer(instance=topics)
+            serializer_place = PlaceSerializer(instance=places)
+            serializer_pictures = PictureSerializer(instance=pictures)
+            response = {'topics': serializer_topic.data, 'places': serializer_place.data, \
+                        'pictures':serializer_pictures.data}
+            return Response(response)
+        except Area.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+##############################################################
 @api_view(['GET'])
 @authentication_classes((BasicAuthentication,))
 @permission_classes((IsAuthenticated,))
@@ -46,7 +75,7 @@ def app_metadata(request, name):
 
 @api_view(['GET'])
 @authentication_classes((BasicAuthentication,))
-@permission_classes((AllowAny,))#IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def app_links(request,name):
     """
     Apps Exchange Links
@@ -54,7 +83,7 @@ def app_links(request,name):
     try:
         from_coord = OfflineMap.objects.get(in_area__en_name=name).center
         zh_name = Area.objects.get(en_name=name).zh_name
-        apps = APPInfo.objects.filter(sell_date__lt=datetime.datetime.now()).exclude(area__en_name=name)
+        apps = APPInfo.objects.filter(sell_date__lt=datetime.now()).exclude(area__en_name=name)
         result = {}
         cityapps = []
         for app in apps:
