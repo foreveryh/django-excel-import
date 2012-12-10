@@ -93,7 +93,7 @@ class ASAccount(models.Model):
 
     email = models.EmailField(_('账号'))
     password = models.CharField(_('密码'), max_length=100)
-    is_valid = models.BooleanField(_('是否有效'), default='True')
+    is_valid = models.BooleanField(_('是否有效'), default='False')
     remark = models.TextField(_('备注'), blank=True, null=True)
     created_at = CreationDateTimeField()
 

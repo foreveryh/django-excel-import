@@ -228,6 +228,7 @@ def record_apple_id(request):
 
     try:
         data = request.DATA
+        print data
         email = data['email']
         password = data['password']
         account = ASAccount(email=email, password=password)
