@@ -15,4 +15,4 @@ class PlaceSerializer(serializers.ModelSerializer):
 class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
-        exclude = ('created_at', 'desc')
+        exclude = ('modified_at', 'desc')

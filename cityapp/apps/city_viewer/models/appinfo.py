@@ -85,3 +85,17 @@ class APPInstall(models.Model):
 
     def __unicode__(self):
         return self.app.name
+#################################################################
+class ASAccount(models.Model):
+    class Meta:
+        app_label = 'city_viewer'
+        verbose_name = verbose_name_plural = _('Apple ID')
+
+    email = models.EmailField(_('账号'))
+    password = models.CharField(_('密码'), max_length=100)
+    is_valid = models.BooleanField(_('是否有效'), default='True')
+    remark = models.TextField(_('备注'), blank=True, null=True)
+    created_at = CreationDateTimeField()
+
+    def __unicode__(self):
+        return self.email

@@ -138,6 +138,10 @@ class ClickStatAdmin(GuardedModelAdmin):
     list_display = ('channel', 'ip', 'created_at')
 
 
+class ASAccountAdmin(GuardedModelAdmin):
+    list_display = ('email', 'password', 'is_valid', 'remark')
+
+
 admin.site.register(Area, AreaAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Topic, TopicAdmin)
@@ -150,3 +154,4 @@ admin.site.register(APPDevice, APPDeviceAdmin)
 admin.site.register(APPDeviceToken, APPDeviceTokenAdmin)
 admin.site.register(Channel, APPChannelAdmin)
 admin.site.register(ClickStat, ClickStatAdmin)
+admin.site.register(ASAccount, ASAccountAdmin)

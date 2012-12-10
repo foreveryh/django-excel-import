@@ -35,6 +35,8 @@ class CityAppDashboard(Dashboard):
                 PREFIX + 'appinfo.APPInfo',
                 PREFIX + 'appreview.APPReview',
                 PREFIX + 'appinfo.APPDevice',
+                PREFIX + 'appinfo.APPDeviceToken',
+                PREFIX + 'appinfo.ASAccount',
             )
         ))
 

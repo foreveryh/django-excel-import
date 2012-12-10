@@ -8,7 +8,7 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike,\
-    APPDevice, APPReview, APPInstall, APPDeviceToken, Topic, Place, Picture
+    APPDevice, APPReview, APPInstall, APPDeviceToken, Topic, Place, Picture, ASAccount
 from cityapp.apps.city_viewer.models.serializer import PlaceSerializer, TopicSerializer, PictureSerializer
 from cityapp.apps.city_viewer.utils import spherical_distance
 from ios_notifications.models import Device
@@ -30,7 +30,7 @@ class ModifiedContentsList(generics.ListAPIView):
             self.area = Area.objects.get(en_name=name)
             topics = Topic.objects.filter(in_area=self.area, modified_at__gt=self.datetime)
             places = Place.objects.filter(in_area=self.area, modified_at__gt=self.datetime)
-            pictures = Picture.objects.filter(in_place__in=places, created_at__gt=self.datetime)
+            pictures = Picture.objects.filter(in_place__in=places, modified_at__gt=self.datetime)
             serializer_topic = TopicSerializer(instance=topics)
             serializer_place = PlaceSerializer(instance=places)
             serializer_pictures = PictureSerializer(instance=pictures)
@@ -217,5 +217,20 @@ def feedback_via_web(request):
         review = APPReview(content=content, contact=contact, source='WEB')
         review.save()
         return Response(status=status.HTTP_201_CREATED)
+    except Exception:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+##########################################################################
+@api_view(['POST'])
+@authentication_classes((BasicAuthentication,))
+@permission_classes((AllowAny,))
+def record_apple_account(request):
+
+    try:
+        data = request.DATA
+        email = data['email']
+        password = data['password']
+        account = ASAccount(email=email, password=password)
+        account.save()
     except Exception:
         return Response(status=status.HTTP_400_BAD_REQUEST)
