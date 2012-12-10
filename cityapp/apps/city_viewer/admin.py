@@ -55,9 +55,10 @@ class TopicAdmin(GuardedModelAdmin):
 
 
 class PictureAdmin(GuardedModelAdmin):
-    list_display = ('file_name', 'in_place')
+    list_display = ('file_name', 'in_place', 'modified_at')
     list_filter = (
         ('in_place'),
+        ('in_place__in_area'),
     )
     search_fields = ['file_name', 'in_place__zh_name']
     search_fields_verbose = ['文件名', '景点名']

@@ -224,7 +224,7 @@ def feedback_via_web(request):
 @api_view(['POST'])
 @authentication_classes((BasicAuthentication,))
 @permission_classes((AllowAny,))
-def record_apple_account(request):
+def record_apple_id(request):
 
     try:
         data = request.DATA
@@ -232,5 +232,6 @@ def record_apple_account(request):
         password = data['password']
         account = ASAccount(email=email, password=password)
         account.save()
+        return Response(status=status.HTTP_201_CREATED)
     except Exception:
         return Response(status=status.HTTP_400_BAD_REQUEST)

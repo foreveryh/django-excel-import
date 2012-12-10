@@ -16,7 +16,7 @@ topic_template = Template("""INSERT INTO "city_topic" VALUES('${id}','${name}','
 #place_template = Template("""INSERT INTO "city_place" VALUES('${id}','${zh_name}','${en_name}',${category},${in_area_id},'${longitude}','${latitude}','${short_desc}','${full_desc}',${fit_time},'${open_time}','${address}','${traffic}','${price}','${tel}','${website}','${tips}','${modified_at}'); """)
 place_template = Template("""INSERT INTO "city_place" VALUES('${id}','${zh_name}','${en_name}',${category},'${longitude}','${latitude}','${short_desc}',${fit_time},'${info}');""")
 place_in_topic_template = Template("""INSERT INTO "city_place_in_topics" VALUES('${id}','${place_id}','${topic_id}');""");
-picture_template = Template("""INSERT INTO "city_picture" VALUES('${id}','${file_name}','${url}','${desc}','${in_place_id}','${create_at}');""")
+picture_template = Template("""INSERT INTO "city_picture" VALUES('${id}','${file_name}','${url}','${desc}','${in_place_id}','${modified_at}');""")
 meta_template = Template("""INSERT INTO "city_meta" VALUES('${key}', '${value}');""")
 
 def handle_single_quote(**dict):
