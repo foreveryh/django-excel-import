@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from cityapp.apps.city_viewer.models import Topic, Place, Picture
+from cityapp.apps.city_viewer.models import Topic, Place, Picture, ASAccount
 
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +16,8 @@ class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
         exclude = ('modified_at', 'desc')
+
+class ASAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ASAccount
+        fields= ('email', 'password')

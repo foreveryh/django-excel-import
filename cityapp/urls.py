@@ -11,7 +11,7 @@ from cityapp.apps.city_viewer.views import CityViewerView, IndexView, HomeView,\
     TripTipView, AboutMeView, WeixinView, ChannelView
 from cityapp.apps.city_viewer.api import app_metadata, app_links, like_me, \
     install_me, feedback, feedback_via_web, add_device_token, ModifiedContentsList, \
-    record_apple_id
+    record_apple_id, ASAccountList
 
 dajaxice_autodiscover()
 admin.autodiscover()
@@ -37,7 +37,7 @@ urlpatterns += patterns('',
     url(r'^api/(?P<name>\w+)/contents/$', ModifiedContentsList.as_view()),
     #Others
     url(r'^api/feedback/$',feedback_via_web),
-    url(r'^api/appleid/$', record_apple_id),
+    url(r'^api/appleid/$', ASAccountList.as_view())
 )
 urlpatterns += patterns('',
     url(r'^channels/(?P<city>\w+)/(?P<cid>[0-9]+)/$', ChannelView.as_view(), name='app_channel'),

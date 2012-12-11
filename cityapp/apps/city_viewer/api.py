@@ -9,7 +9,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike,\
     APPDevice, APPReview, APPInstall, APPDeviceToken, Topic, Place, Picture, ASAccount
-from cityapp.apps.city_viewer.models.serializer import PlaceSerializer, TopicSerializer, PictureSerializer
+from cityapp.apps.city_viewer.models.serializer import PlaceSerializer, TopicSerializer, \
+    PictureSerializer, ASAccountSerializer
 from cityapp.apps.city_viewer.utils import spherical_distance
 from ios_notifications.models import Device
 
@@ -228,7 +229,6 @@ def record_apple_id(request):
 
     try:
         data = request.DATA
-        print data
         email = data['email']
         password = data['password']
         account = ASAccount(email=email, password=password)
@@ -236,3 +236,32 @@ def record_apple_id(request):
         return Response(status=status.HTTP_201_CREATED)
     except Exception:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ASAccountList(generics.ListAPIView):
+    model = ASAccount
+    serializer_class = ASAccountSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        return ASAccount.objects.filter(is_valid=False)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.DATA
+            print data
+            email = data['email']
+            password = data['password']
+            account = ASAccount(email=email, password=password, is_valid=False)
+            account.save()
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, *args, **kwargs):
+        try:
+            account = ASAccount.objects.get(email=request.DATA['email'])
+            account.active()
+            return Response(status=status.HTTP_200_OK)
+        except ASAccount.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

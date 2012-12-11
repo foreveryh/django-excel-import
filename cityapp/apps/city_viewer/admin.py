@@ -135,12 +135,13 @@ class APPChannelAdmin(GuardedModelAdmin):
 
     click_fraud.short_description = '恶意点击'
 
+
 class ClickStatAdmin(GuardedModelAdmin):
     list_display = ('channel', 'ip', 'created_at')
 
 
 class ASAccountAdmin(GuardedModelAdmin):
-    list_display = ('email', 'password', 'is_valid', 'remark')
+    list_display = ('email', 'password', 'is_valid', 'remark', 'created_at')
 
 
 admin.site.register(Area, AreaAdmin)
