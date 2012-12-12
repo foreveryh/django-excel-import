@@ -146,11 +146,16 @@ def export_city_db(name):
 
 def export_city_tips_html(name):
     export_path = os.path.join(settings.STATIC_ROOT, 'cities/', name)
+    html_path = os.path.join(export_path, 'tips.html')
+    if not os.path.isdir(export_path):
+        export_path = os.path.join(settings.STATIC_ROOT, 'cities/')
+        html_path = os.path.join(export_path, 'tips_%s.html' % name)
+
     template_name = 'city_viewer/triptips.html'
     tips = TripTip.objects.filter(in_area__en_name=name)
     body = loader.render_to_string(template_name, {'tips': tips})
     body.replace('/static/css/images/','')
-    html_path = os.path.join(export_path, 'tips.html')
+
     with open(html_path, 'w') as fp:
         fp.write(body.encode('utf-8'))
     fp.close()
