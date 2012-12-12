@@ -132,9 +132,12 @@ def install_me(request, name):
         system = request.DATA['system']
         platform = request.DATA['platform']
         device = APPDevice.objects.get(identifier=device_id)
+        device.system = system
+        device.platform = platform
     except APPDevice.DoesNotExist:
         device = APPDevice(identifier=device_id, system=system, platform=platform)
-        device.save()
+
+    device.save()
 
     try:
         app = APPInfo.objects.get(area__en_name=name)
@@ -154,14 +157,17 @@ def add_device_token(request, name):
     try:
         device_id = request.DATA['device']
         token = request.DATA['token']
+        app = APPInfo.objects.get(area__en_name=name)
         device = APPDevice.objects.get(identifier=device_id)
-        device_token = APPDeviceToken(device=device, token=token)
-        device_token.save()
-        return Response(status=status.HTTP_201_CREATED)
     except APPInfo.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except APPDevice.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        device = APPDevice(identifier=device_id, system='', platform='')
+        device.save()
+
+    device_token = APPDeviceToken(device=device, token=token, app=app)
+    device_token.save()
+    return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 @authentication_classes((BasicAuthentication,))

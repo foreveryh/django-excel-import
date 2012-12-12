@@ -42,8 +42,13 @@ class APPDeviceToken(models.Model):
     class Meta:
         app_label = 'city_viewer'
         verbose_name = verbose_name_plural = _('设备Token')
-    token = models.CharField(max_length=100)
+
+    app = models.ForeignKey(APPInfo, verbose_name=_('App'))
+    token = models.CharField(_('Token'), max_length=100)
     device = models.ForeignKey(APPDevice, verbose_name=_('设备'))
+
+    def __unicode__(self):
+        return self.token
 
 
 class APPLikeManager(models.Manager):
