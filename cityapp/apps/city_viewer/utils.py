@@ -127,7 +127,7 @@ def export_city_db(name):
     export_path = os.path.join(settings.STATIC_ROOT, 'cities/', name)
     #检查目录
     if not os.path.isdir(export_path):
-        raise IOError
+        export_path = os.path.join(settings.STATIC_ROOT, 'cities/')
     #确定路径
     sql_path = os.path.join(db_dir_path, name + '.sql')
     db_path = os.path.join(export_path, name + '.db')
