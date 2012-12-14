@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #from __future__ import unicode_literals
+from django.core import serializers
 import os
 import shutil
 import sqlite3
@@ -71,6 +72,7 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
                 app_info = APPInfo.objects.get(area=area)
                 meta.append({"key":"rating_url", "value":app_info.link})
                 meta.append({"key":"latest_ver","value":app_info.latest_ver})
+                meta.append({"key":"asid", "value":app_info.asid})
             except APPInfo.DoesNotExist:
                 pass
 
@@ -121,7 +123,49 @@ def export_city_sql(name, sql_schema='db_schema.sql'):
                     fp.write('%s\n' % line)
             fp.write('COMMIT;')
         fp.close()
+#######################################################
+#导出更新的数据
+def sstrip(str):
+    if len(str) > 2:
+        return str[1:-1] + ','
+    else:
+        return ''
 
+def json(str):
+    return '[' + str[:-1] + ']'
+
+def dump_data(queryset):
+    #Area
+    areas_data = sstrip(serializers.serialize("json", queryset))
+    for area in queryset:
+        #AppInfo
+        appinfo = area.appinfo_set.all()
+        appinfo_data = sstrip(serializers.serialize("json", appinfo))
+        #OfflineMap
+        om = area.offlinemap_set.all()
+        om_data = sstrip(serializers.serialize("json", om))
+        #Tips
+        tips = area.triptip_set.all()
+        tips_data = sstrip(serializers.serialize("json", tips))
+        #Topic
+        topics = area.topic_set.all()
+        topic_data = sstrip(serializers.serialize("json", topics))
+        #Place
+        places = area.place_set.all()
+        place_data = sstrip(serializers.serialize("json", places))
+        #Pictures
+        pictures_data = ''
+        for place in places:
+            pictures = place.picture_set.all()
+            pictures_data += sstrip(serializers.serialize("json", pictures))
+        area_data = topic_data + place_data + pictures_data + tips_data + appinfo_data + om_data
+        areas_data += area_data
+    export_path = os.path.join(settings.STATIC_ROOT, 'cities/', "data.json")
+    with open(export_path, 'w') as fp:
+        fp.write(json(areas_data).encode('utf-8'))
+    fp.close()
+#######################################################
+#导出单个城市的数据
 def export_city_db(name):
     db_dir_path = os.path.join(settings.STATIC_ROOT, 'city_db/')
     export_path = os.path.join(settings.STATIC_ROOT, 'cities/', name)

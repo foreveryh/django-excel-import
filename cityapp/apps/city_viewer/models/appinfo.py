@@ -18,7 +18,7 @@ class APPInfo(models.Model):
     link = models.URLField(_('App Store链接'), blank=True)
     msg = models.CharField(_('APP消息'), max_length=100, blank=True)
     sell_date = models.DateField(_('上线时间'))
-    latest_ver = models.CharField(_('最新版本'), max_length=3, default='1')
+    latest_ver = models.CharField(_('最新版本'), max_length=4, default='1000')
     area = models.ForeignKey(Area, verbose_name=_('城市'), blank=True, null=True, on_delete= models.SET_NULL)
 
     def __unicode__(self):

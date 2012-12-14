@@ -10,7 +10,7 @@ from cityapp.apps.city_viewer.utils import *
 
 class AreaAdmin(GuardedModelAdmin):
     list_display = ('zh_name', 'author', 'topic_num', 'place_num')
-    actions = ['export_db']
+    actions = ['export_db', 'dump_data']
 
     def topic_num(self, obj):
         return obj.topic_set.all().count()
@@ -33,6 +33,12 @@ class AreaAdmin(GuardedModelAdmin):
             self.message_user(request, "导出数据成功")
 
     export_db.short_description = '导出数据库'
+
+    def dump_data(self, request, queryset):
+        dump_data(queryset)
+        self.message_user(request, "Dump数据成功")
+
+    dump_data.short_description = 'Dump 数据'
 
 
 class PlaceAdmin(GuardedModelAdmin):

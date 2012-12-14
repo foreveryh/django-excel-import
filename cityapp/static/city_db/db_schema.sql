@@ -24,8 +24,8 @@ CREATE TABLE "city_place" (
     "zh_name" varchar(50) NOT NULL,
     "en_name" varchar(100) NOT NULL,
     "category" smallint NOT NULL,
-    "longitude" varchar(20) NOT NULL,
-    "latitude" varchar(20) NOT NULL,
+    "longitude" DOUBLE NOT NULL,
+    "latitude" DOUBLE NOT NULL,
     "short_desc" varchar(100) NOT NULL,
     "fit_time" smallint NOT NULL,
     "info" text NOT NULL
