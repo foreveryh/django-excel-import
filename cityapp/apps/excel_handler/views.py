@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from filebrowser.functions import version_generator
 import os
 import shutil
@@ -36,18 +37,18 @@ class ImportExcel(FormView):
         try:
             converted_data = form.get_converted_data(cleaned_data)
         except Exception, e:
-            error_message = u'Error with excel file: %s' % str(e)
+            error_message = 'Error with excel file: %s' % str(e)
             form.errors['excel_file'] = ErrorList([error_message])
         else:
             initial =  {'converted_data': simplejson.dumps(converted_data) }
             form = self.get_form_class()(initial=initial)
             form.fields['excel_file'].widget = forms.HiddenInput()
-            form.fields['zh_name'] = forms.CharField(required=True, label=u'输入城市中文名称')
+            form.fields['zh_name'] = forms.CharField(required=True, label='输入城市中文名称')
             #form.fields['en_name'] = forms.CharField(required=True, )
             dir_list = site.storage.listdir(settings.MEDIA_ROOT+'/uploads/')
             dir_choices = map ((lambda x: (x, x)), dir_list[0])
-            form.fields['en_name'] = forms.ChoiceField(choices=dir_choices, label=u'选择图片的文件夹名称（英文名）')
-            form.fields['file_type'] =  forms.ChoiceField(choices = ([('zh',u'中文名_1.jpg'), ('en',u'英文名_1.jpg')]), required = True, label=u'上传图片名格式')
+            form.fields['en_name'] = forms.ChoiceField(choices=dir_choices, label='选择图片的文件夹名称（英文名）')
+            form.fields['file_type'] =  forms.ChoiceField(choices = ([('zh','中文名_1.jpg'), ('en','英文名_1.jpg')]), required = True, label='上传图片名格式')
             self.extra_context.update({'form': form , 'uploaded': True, 'converted_data': converted_data})
             return super(ImportExcel, self).render_to_response(self.extra_context)
 
@@ -101,7 +102,7 @@ def check_area(request, city, data):
     #检测图片文件夹是否存在
     area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', v.cityDict['en_name'])
     if not os.path.isdir(area_dir_path):
-        message['message']=u'图片文件夹不存在'
+        message['message']='图片文件夹不存在'
         return simplejson.dumps(message)
     try:
         area = Area.objects.get(zh_name=v.cityDict['zh_name'])
@@ -112,7 +113,7 @@ def check_area(request, city, data):
         area.save()
         message['message'] = import_data(area, v.dataDict, v.cityDict['type'])
     else:
-        message['message'] = u'城市已经存在'
+        message['message'] = '城市已经存在'
     return simplejson.dumps(message)
 
 def import_data(area, data, type):
@@ -188,8 +189,8 @@ def handle_topic_data(item, type):
     item['cover_pic'] = file_name
     return item
 
-categoryDict = {u'景点': 1, u'餐厅': 1<<1, u'购物': 1<<2, u'娱乐': 1<<3}
-fittimeDict = {u'上午': 1, u'下午': 1<<1, u'晚上': 1<<2, u'全天': 1<<3}
+categoryDict = {'景点': 1, '餐厅': 1<<1, '购物': 1<<2, '娱乐': 1<<3}
+fittimeDict = {'上午': 1, '下午': 1<<1, '晚上': 1<<2, '全天': 1<<3}
 def handle_place_data(item):
     #处理经纬度
     latlng = item['latlng'].split(',')
@@ -219,15 +220,10 @@ def handle_place_data(item):
     item.pop('topic')
     item.pop('slug')
     #打印数据查找错误
-    #print item['zh_name']
-    #print item['en_name']
-    #print item['short_desc']
-    #print item['full_desc']
-    #print item['fittime']
-    #print item['price']
-    #print item['category']
-    #print item['tel']
-    #print item['website']
+    print item['zh_name'].encode('utf-8')
+    print item['en_name'].encode('utf-8')
+    print item['short_desc'].encode('utf-8')
+    print item['full_desc'].encode('utf-8')
 
     return item
 
@@ -237,16 +233,27 @@ def link_local_pics(area, place, pics_name_type):
     findit = True
     count = 0
     area_dir_path = os.path.join(settings.MEDIA_ROOT, 'uploads/', area.en_name)
+    file_ext = None
     while findit:
         count += 1
         if pics_name_type == 'en':
-            file_name = convert_name(place.en_name + '_%d' % count + '.jpg')
+            file_name = convert_name(place.en_name + '_%d' % count)
         elif pics_name_type == 'zh':
-            file_name = convert_name(place.zh_name + '_%d' % count + '.jpg')
+            file_name = convert_name(place.zh_name + '_%d' % count)
+
         full_path = area_dir_path + '/' + file_name
-        findit = os.path.isfile(full_path)
+
+        if os.path.isfile(full_path + '.jpg'):
+            file_ext = '.jpg'
+        elif os.path.isfile(full_path + '.jpeg'):
+            file_ext = '.jpeg'
+        else:
+            findit = False
+
         if findit:
-            url = settings.MEDIA_URL + 'uploads/' + area.en_name + '/' + file_name
-            pic = Picture(in_place=place, file_name = file_name, url = url)
+            url = settings.MEDIA_URL + 'uploads/' + area.en_name + '/' + file_name + file_ext
+            pic = Picture(in_place=place, file_name = file_name + file_ext, url = url)
             pic.save()
+        else:
+            print 'can not find %s' % file_name
     return count - 1
