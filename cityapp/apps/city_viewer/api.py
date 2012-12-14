@@ -165,9 +165,13 @@ def add_device_token(request, name):
         device = APPDevice(identifier=device_id, system='', platform='')
         device.save()
 
-    device_token = APPDeviceToken(device=device, token=token, app=app)
-    device_token.save()
-    return Response(status=status.HTTP_201_CREATED)
+    try:
+        if not APPDeviceToken.objects.filter(token=token).count():
+            device_token = APPDeviceToken(device=device, token=token, app=app)
+            device_token.save()
+        return Response(status=status.HTTP_201_CREATED)
+    except Exception:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @authentication_classes((BasicAuthentication,))
