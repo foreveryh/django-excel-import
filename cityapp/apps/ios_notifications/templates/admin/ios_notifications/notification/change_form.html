@@ -1,0 +1,29 @@
+{% extends "admin/change_form.html" %}{% load url from future %}
+{% block extrastyle %}
+    {{ block.super }}
+    <style type="text/css">
+        #send_notification {
+            float: left;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+{{ block.super }}
+{% with notification=adminform.form.instance %}
+{% if notification and notification.id %}
+<div id="send_notification">
+    <h2>推送消息</h2>
+    <p style="font-weight: bold; font-size: 18; color: red">点击下面的"立即推送"按钮，把消息推送给当前App的所有用户。点了，可就发了，撤销不了的！</p>
+    <form action="{% url 'admin:admin_push_notification' notification.id %}" method="POST" id="push_notification_form">
+        {% csrf_token %}
+        <input type="submit" value="立即推送!" />
+    </form>
+</div>
+<script type="text/javascript">
+    document.getElementById('push_notification_form').onsubmit = function(e) {
+        return confirm('有没有再检查一遍，真的要发吗?');
+    };
+</script>
+{% endif %}
+{% endwith %}
+{% endblock %}

@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/pics/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^ios-notifications/', include('ios_notifications.urls')),
+    url(r'^ios-notifications/', include('cityapp.apps.ios_notifications.urls')),
 )
 urlpatterns += patterns('',
     #API for app

@@ -8,12 +8,11 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike,\
-    APPDevice, APPReview, APPInstall, APPDeviceToken, Topic, Place, Picture, ASAccount
+    APPDevice, APPReview, APPInstall, Topic, Place, Picture, ASAccount
 from cityapp.apps.city_viewer.models.serializer import PlaceSerializer, TopicSerializer, \
     PictureSerializer, ASAccountSerializer
 from cityapp.apps.city_viewer.utils import spherical_distance
-from ios_notifications.models import Device
-
+from cityapp.apps.ios_notifications.models import DeviceToken, APNService
 
 
 class ModifiedContentsList(generics.ListAPIView):
@@ -154,24 +153,33 @@ def add_device_token(request, name):
     """
     Notification
     """
+    device_id = request.DATA['device']
+    token = request.DATA['token']
     try:
-        device_id = request.DATA['device']
-        token = request.DATA['token']
-        app = APPInfo.objects.get(area__en_name=name)
         device = APPDevice.objects.get(identifier=device_id)
-    except APPInfo.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
     except APPDevice.DoesNotExist:
         device = APPDevice(identifier=device_id, system='', platform='')
         device.save()
 
     try:
-        if not APPDeviceToken.objects.filter(token=token).count():
-            device_token = APPDeviceToken(device=device, token=token, app=app)
-            device_token.save()
+        service = APNService.objects.get(app__area__en_name=name)
+    except APNService.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    deviceTokens = DeviceToken.objects.filter(token=token, service=service)
+    if deviceTokens.exists():
+        deviceToken = deviceTokens.get()
+        deviceToken.is_active = True
+        deviceToken.device = device
+        deviceToken.save()
         return Response(status=status.HTTP_201_CREATED)
-    except Exception:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        deviceToken = DeviceToken(token=token, device=device, service=service)
+        deviceToken.is_active = True
+        deviceToken.save()
+        return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 @authentication_classes((BasicAuthentication,))

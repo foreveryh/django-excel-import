@@ -30,7 +30,7 @@ class APPDevice(models.Model):
         app_label = 'city_viewer'
         verbose_name  = verbose_name_plural = _('安装设备')
 
-    identifier = models.CharField(_('标示符'), max_length=255)
+    identifier = models.CharField(_('标示符'), max_length=255, db_index=True)
     system = models.CharField(_('系统'), max_length=100)
     platform = models.CharField(_('设备'), max_length=100)
 

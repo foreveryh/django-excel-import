@@ -220,3 +220,21 @@ def spherical_distance(f, t):
     con = math.sin(flat)*math.sin(tlat)
     con += math.cos(flat)*math.cos(tlat)*math.cos(flon - tlon)
     return math.acos(con)*EARTH_RADIUS_METER
+
+#######################################################
+#重新整理Token
+def export_device_token():
+    from cityapp.apps.city_viewer.models.appinfo import APPDeviceToken
+    from cityapp.apps.ios_notifications.models import DeviceToken, APNService
+    tokens = APPDeviceToken.objects.all()
+    for token in tokens:
+        print token.token
+        services = APNService.objects.filter(app=token.app)
+        if services.exists():
+            service = services.get()
+        else:
+            service = APNService(app=token.app)
+            service.save()
+
+        new_token = DeviceToken(service=service, device=token.device, token=token.token, is_active=True)
+        new_token.save()

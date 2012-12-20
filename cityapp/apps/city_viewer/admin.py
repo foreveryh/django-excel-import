@@ -117,10 +117,6 @@ class APPDeviceAdmin(GuardedModelAdmin):
     )
 
 
-class APPDeviceTokenAdmin(GuardedModelAdmin):
-    list_display = ('device', 'token')
-
-
 class APPChannelAdmin(GuardedModelAdmin):
     list_display = ('name', 'app', 'channel_url', 'click_num', 'created_at', 'click_fraud')
     list_filter = (
@@ -159,7 +155,6 @@ admin.site.register(OfflineMap, OfflineMapAdmin)
 admin.site.register(APPInfo, APPInfoAdmin)
 admin.site.register(APPReview, APPReviewAdmin)
 admin.site.register(APPDevice, APPDeviceAdmin)
-admin.site.register(APPDeviceToken, APPDeviceTokenAdmin)
 admin.site.register(Channel, APPChannelAdmin)
 admin.site.register(ClickStat, ClickStatAdmin)
 admin.site.register(ASAccount, ASAccountAdmin)

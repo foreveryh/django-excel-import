@@ -35,7 +35,6 @@ class CityAppDashboard(Dashboard):
                 PREFIX + 'appinfo.APPInfo',
                 PREFIX + 'appreview.APPReview',
                 PREFIX + 'appinfo.APPDevice',
-                PREFIX + 'appinfo.APPDeviceToken',
                 PREFIX + 'appinfo.ASAccount',
             )
         ))
@@ -89,7 +88,7 @@ class CityAppDashboard(Dashboard):
             _('推送管理'),
             column=1,
             collapsible=False,
-            models=('ios_notifications.*',)
+            models=('cityapp.apps.ios_notifications.*',)
         ))
 
         self.children.append(modules.AppList(
