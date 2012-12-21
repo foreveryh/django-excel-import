@@ -150,11 +150,11 @@ class APNService(BaseService):
 
     def get_payload(self, notification):
         aps = {'alert':  notification.message}
-        if notification.badge is not None:
+        if notification.badge is not None and notification.badge !='':
             aps['badge'] = notification.badge
-        if notification.sound is not None:
+        if notification.sound is not None and notification.sound !='':
             aps['sound'] = notification.sound
-        if notification.link is not None:
+        if notification.link is not None and notification.link != '':
             aps['l'] = notification.link
 
         message = {'aps': aps}
@@ -210,11 +210,12 @@ class Notification(models.Model):
             service.push_notification_to_devices(self)
 
     def save(self, force_insert=False, force_update=False):
-        key = base62.to_decimal(self.link)
-        try:
-            ShortURL.objects.get(pk=key)
-        except ShortURL.DoesNotExist:
-            raise ValueError(_('Invalid value of link'))
+        if self.link:
+            key = base62.to_decimal(self.link)
+            try:
+                ShortURL.objects.get(pk=key)
+            except ShortURL.DoesNotExist:
+                raise ValueError(_('Invalid value of link'))
         models.Model.save(self, force_insert, force_update)
 
     def __unicode__(self):
