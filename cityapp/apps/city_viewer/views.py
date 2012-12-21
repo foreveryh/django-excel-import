@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, TemplateView, DetailView, View
 from django.contrib.auth.models import User
-from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip, APPInfo, Channel, ClickStat
+from cityapp.apps.city_viewer.models import Area, Topic, Place, Picture, TripTip, APPInfo, Channel, ClickStat, ShortURL
+from cityapp.apps.city_viewer.utils.baseconv import base62
 
 class IndexView(ListView):
     context_object_name = 'apps'
@@ -118,3 +120,17 @@ class ChannelView(View):
             raise Http404(u'No area found matching the query')
         except Channel.DoesNotExist:
             raise Http404(u'No channel found matching the query')
+
+class ShortURLView(View):
+
+    def get(self, request, *args, **kwargs):
+        """
+        View which gets the link for the given base62_id value
+        and redirects to it.
+        """
+        base62_id = kwargs['base62_id']
+        key = base62.to_decimal(base62_id)
+        link = get_object_or_404(ShortURL, pk = key)
+        link.usage_count += 1
+        link.save()
+        return HttpResponsePermanentRedirect(link.url)

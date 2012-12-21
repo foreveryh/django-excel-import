@@ -8,3 +8,4 @@ from appinfo import APPInfo, APPLike, APPInstall, APPDevice, ASAccount
 from appreview import APPReview
 from offlinemap import OfflineMap
 from channels import Channel, ClickStat
+from shorturl import ShortURL

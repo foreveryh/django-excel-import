@@ -38,7 +38,18 @@ class CityAppDashboard(Dashboard):
                 PREFIX + 'appinfo.ASAccount',
             )
         ))
+        self.children.append(modules.ModelList(
+            _('短链接'),
+            pre_content='''
 
+            ''',
+            collapsible=True,
+            column=1,
+            css_classes=('collapse closed',),
+            models=(
+                PREFIX + 'shorturl.ShortURL',
+                )
+        ))
         self.children.append(modules.ModelList(
             _('渠道管理'),
             pre_content='''

@@ -11,7 +11,7 @@ from cityapp.apps.city_viewer.models import Area, OfflineMap, APPInfo, APPLike,\
     APPDevice, APPReview, APPInstall, Topic, Place, Picture, ASAccount
 from cityapp.apps.city_viewer.models.serializer import PlaceSerializer, TopicSerializer, \
     PictureSerializer, ASAccountSerializer
-from cityapp.apps.city_viewer.utils import spherical_distance
+from cityapp.apps.city_viewer.utils.location import spherical_distance
 from cityapp.apps.ios_notifications.models import DeviceToken, APNService
 
 

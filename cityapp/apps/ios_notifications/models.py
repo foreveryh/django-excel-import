@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import struct
-from binascii import hexlify, unhexlify
+from binascii import hexlify, unhexlify, Error
 import datetime
 
 from django.db import models
@@ -10,7 +10,8 @@ from django_fields.fields import EncryptedCharField
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import OpenSSL
-from cityapp.apps.city_viewer.models import APPDevice, APPInfo
+from cityapp.apps.city_viewer.models import APPDevice, APPInfo, ShortURL
+from cityapp.apps.city_viewer.utils.baseconv import base62
 
 
 class NotificationPayloadSizeExceeded(Exception):
@@ -153,6 +154,8 @@ class APNService(BaseService):
             aps['badge'] = notification.badge
         if notification.sound is not None:
             aps['sound'] = notification.sound
+        if notification.link is not None:
+            aps['l'] = notification.link
 
         message = {'aps': aps}
         payload = json.dumps(message, separators=(',', ':'), ensure_ascii=False).encode('utf8')
@@ -193,6 +196,7 @@ class Notification(models.Model):
     message = models.CharField(_(u'消息'), max_length=200, help_text=_(u'最多100个中文字符'))
     badge = models.PositiveIntegerField(_(u'气泡数'), default=1, null=True)
     sound = models.CharField(_(u'声音'), max_length=30, null=True, default='default')
+    link = models.CharField(_(u'链接'), max_length=10, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_sent_at = models.DateTimeField(null=True, blank=True)
 
@@ -205,8 +209,16 @@ class Notification(models.Model):
         for service in self.services:
             service.push_notification_to_devices(self)
 
+    def save(self, force_insert=False, force_update=False):
+        key = base62.to_decimal(self.link)
+        try:
+            ShortURL.objects.get(pk=key)
+        except ShortURL.DoesNotExist:
+            raise ValueError(_('Invalid value of link'))
+        models.Model.save(self, force_insert, force_update)
+
     def __unicode__(self):
-        return u'Notification: %s' % self.message
+        return u'消息: %s' % self.message
 
     @staticmethod
     def is_valid_length(message, badge=None, sound=None):
@@ -220,6 +232,7 @@ class Notification(models.Model):
             aps['badge'] = badge
         if sound is not None:
             aps['sound'] = sound
+
         message = {'aps': aps}
         payload = json.dumps(message, separators=(',', ':'))
         return len(payload) <= 256

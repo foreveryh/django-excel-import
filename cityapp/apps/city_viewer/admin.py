@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from guardian.admin import GuardedModelAdmin
 
 from cityapp.apps.city_viewer.models import *
-from cityapp.apps.city_viewer.utils import *
+from cityapp.apps.city_viewer.utils.export import *
 
 class AreaAdmin(GuardedModelAdmin):
     list_display = ('zh_name', 'author', 'topic_num', 'place_num')
@@ -117,6 +117,9 @@ class APPDeviceAdmin(GuardedModelAdmin):
     )
 
 
+
+
+
 class APPChannelAdmin(GuardedModelAdmin):
     list_display = ('name', 'app', 'channel_url', 'click_num', 'created_at', 'click_fraud')
     list_filter = (
@@ -146,6 +149,18 @@ class ASAccountAdmin(GuardedModelAdmin):
     list_display = ('email', 'password', 'is_valid', 'remark', 'created_at')
 
 
+class ShortURLAdmin (GuardedModelAdmin):
+    list_display = ('short', 'url', 'usage_count', 'short_url', 'created_at')
+
+    def short(self, obj):
+        return obj.to_base62()
+    short.short_description = '短链标示'
+
+    def short_url(self, obj):
+        return settings.SITE_BASE_SHORTURL + obj.to_base62() + '/'
+    short_url.short_description = '短链接'
+
+
 admin.site.register(Area, AreaAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Topic, TopicAdmin)
@@ -158,3 +173,4 @@ admin.site.register(APPDevice, APPDeviceAdmin)
 admin.site.register(Channel, APPChannelAdmin)
 admin.site.register(ClickStat, ClickStatAdmin)
 admin.site.register(ASAccount, ASAccountAdmin)
+admin.site.register(ShortURL, ShortURLAdmin)

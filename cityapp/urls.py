@@ -8,7 +8,7 @@ from filebrowser.sites import site
 import tinymce
 from cityapp.apps.excel_handler.views import ImportExcel
 from cityapp.apps.city_viewer.views import CityViewerView, IndexView, HomeView,\
-    TripTipView, AboutMeView, WeixinView, ChannelView
+    TripTipView, AboutMeView, WeixinView, ChannelView, ShortURLView
 from cityapp.apps.city_viewer.api import app_metadata, app_links, like_me, \
     install_me, feedback, feedback_via_web, add_device_token, ModifiedContentsList, \
     record_apple_id, ASAccountList
@@ -42,6 +42,7 @@ urlpatterns += patterns('',
 urlpatterns += patterns('',
     url(r'^channels/(?P<city>\w+)/(?P<cid>[0-9]+)/$', ChannelView.as_view(), name='app_channel'),
     url(r'^weixin/(?P<city>\w+)/(?P<sid>[a-z0-9-]+)/?', WeixinView.as_view(), name='weixin'),
+    url(r'^notif/(?P<base62_id>\w+)/$', ShortURLView.as_view(), name='shorturl'),
 )
 urlpatterns += patterns('',
     url(r'^(?P<city>\w+)/$',CityViewerView.as_view(), name='city_viewer'),

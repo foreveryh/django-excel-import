@@ -158,6 +158,8 @@ class Base(Settings):
     TINYMCE_JS_URL = os.path.join(STATIC_ROOT, "js/tiny_mce/tiny_mce.js")
     TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "js/tiny_mce")
 
+    #SHORT URL BASE URL
+    SITE_BASE_SHORTURL = 'http://cityapps.tukeq.com/notif/'
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES
