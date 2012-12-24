@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 import inspect
 import os
+import djcelery
 
 from configurations import Settings
 
@@ -42,6 +43,7 @@ class Base(Settings):
         'filebrowser',
         'tinymce',
         'rest_framework',
+        'djcelery',
         'cityapp.apps.excel_handler',
         'cityapp.apps.city_viewer',
         'cityapp.apps.ios_notifications',
@@ -160,6 +162,14 @@ class Base(Settings):
 
     #SHORT URL BASE URL
     SITE_BASE_SHORTURL = 'http://cityapps.tukeq.com/notif/'
+
+    #Celery
+    djcelery.setup_loader()
+    BROKER_HOST = 'localhost'
+    BROKER_PORT = 5672
+    BROKER_USER = 'guest'
+    BROKER_PASSWORD = 'guest'
+    BROKER_URL = 'amqp://guest:guest@localhost:5672/'
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES

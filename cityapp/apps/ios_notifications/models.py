@@ -12,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 import OpenSSL
 from cityapp.apps.city_viewer.models import APPDevice, APPInfo, ShortURL
 from cityapp.apps.city_viewer.utils.baseconv import base62
-
+from celery import task
 
 class NotificationPayloadSizeExceeded(Exception):
     def __init__(self, message='The notification maximum payload size of 256 bytes was exceeded'):
@@ -81,6 +81,18 @@ class BaseService(models.Model):
         abstract = True
 
 
+@task(ignore_result=True)
+def push_notification_to_devices(sid, nid):
+    try:
+        service = APNService.objects.get(pk=sid)
+        notification = Notification.objects.get(pk=nid)
+        service.push_notification_to_devices(notification)
+    except APNService.DoesNotExist:
+        pass
+    except Notification.DoesNotExist:
+        pass
+
+
 class APNService(BaseService):
     """
     Represents an Apple Notification Service either for live
@@ -103,6 +115,7 @@ class APNService(BaseService):
         """
         return super(APNService, self).connect(self.certificate, self.private_key, self.passphrase)
 
+
     def push_notification_to_devices(self, notification, devices=None):
         """
         Sends the specific notification to devices.
@@ -114,6 +127,7 @@ class APNService(BaseService):
         if self.connect():
             self._write_message(notification, devices)
             self.disconnect()
+
 
     def _write_message(self, notification, devices):
         """
@@ -132,6 +146,7 @@ class APNService(BaseService):
         for device in devices:
             try:
                 self.connection.send(self.pack_message(payload, device))
+                #_send_message.delay(self.id, payload, device)
             except OpenSSL.SSL.WantWriteError:
                 self.disconnect()
                 i = devices.index(device)
@@ -147,6 +162,7 @@ class APNService(BaseService):
                 device.save()
         notification.last_sent_at = datetime.datetime.now()
         notification.save()
+
 
     def get_payload(self, notification):
         aps = {'alert':  notification.message}

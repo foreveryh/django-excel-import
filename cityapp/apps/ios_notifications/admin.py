@@ -5,7 +5,7 @@ from django.conf.urls.defaults import patterns, url
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
 
-from models import DeviceToken, Notification, APNService, FeedbackService
+from models import DeviceToken, Notification, APNService, FeedbackService, push_notification_to_devices
 from forms import APNServiceForm
 
 class APNServiceAdmin(admin.ModelAdmin):
@@ -40,7 +40,8 @@ class NotificationAdmin(admin.ModelAdmin):
             services = notification.services.all()
             for service in services:
                 num_devices += service.devicetoken_set.filter(is_active=True).count()
-                service.push_notification_to_devices(notification)
+                #service.push_notification_to_devices.delay(notification)
+                push_notification_to_devices.delay(service.id, notification.id)
 
         return TemplateResponse(request, 'admin/ios_notifications/notification/push_notification.html',
                                 {'notification': notification, 'num_devices': num_devices, 'sent': request.method == 'POST'},
