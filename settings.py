@@ -9,12 +9,20 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 class Base(Settings):
 
     DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.db.backends.sqlite3',
+#            'NAME': 'cityapp.db',
+#            'USER': '',                      # Not used with sqlite3.
+#            'PASSWORD': '',                  # Not used with sqlite3.
+#            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+#            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+#        }
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'cityapp.db',
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'ENGINE': 'django.db.backends.mysql', #'django.db.backends.sqlite3',
+            'NAME': 'cityapp', #'cityapp.db',
+            'USER': 'root',                      # Not used with sqlite3.
+            'PASSWORD': 'tukeq123',                  # Not used with sqlite3.
+            'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
             'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         }
     }
@@ -170,6 +178,14 @@ class Base(Settings):
     BROKER_USER = 'guest'
     BROKER_PASSWORD = 'guest'
     BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+
+    #Upyun
+    UPYUN_MAPS_BINDING_DOMAIN = 'cityapp-map.b0.upaiyun.com'
+    UPYUN_MAPS_BUCKET = 'cityapp-map'
+    UPYUN_PICS_BINDING_DOMAIN = 'cityapp-pics.b0.upaiyun.com'
+    UPYUN_PICS_BUCKET = 'cityapp-pics'
+    UPYUN_OPERATOR_NAME = 'tukeq'
+    UPYUN_OPERATOR_PASSWORD = '1qaz2wsx'
 
 class LocalDev(Base):
     DATABASES = Base.DATABASES

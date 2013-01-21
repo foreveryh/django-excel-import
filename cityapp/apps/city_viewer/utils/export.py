@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf8 -*-
 #from __future__ import unicode_literals
 from django.core import serializers
 import os
@@ -221,3 +221,5 @@ def export_device_token():
 
         new_token = DeviceToken(service=service, device=token.device, token=token.token, is_active=True)
         new_token.save()
+
+#######################################################

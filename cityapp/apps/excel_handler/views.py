@@ -80,13 +80,19 @@ def generate_images(request,city, data):
         while findit:
             count += 1
             if type == 'en':
-                file_name = convert_name(place['en_name'] + '_%d' % count + '.jpg')
+                file_name = convert_name(place['en_name'] + '_%d' % count)
             elif type == 'zh':
-                file_name = convert_name(place['zh_name'] + '_%d' % count + '.jpg')
+                file_name = convert_name(place['zh_name'] + '_%d' % count)
             full_path = resource_path + '/' + file_name
-            findit = os.path.isfile(full_path)
+            if os.path.isfile(full_path + '.jpg'):
+                file_ext = '.jpg'
+            elif os.path.isfile(full_path + '.jpeg'):
+                file_ext = '.jpeg'
+            else:
+                findit = False
+
             if findit:
-                for path in [version_generator(full_path, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]:
+                for path in [version_generator(full_path+file_ext, version, force=True) for version in ['thumbnail', 'small', 'medium', 'big']]:
                     try:
                         shutil.move(path, export_path)
                     except:

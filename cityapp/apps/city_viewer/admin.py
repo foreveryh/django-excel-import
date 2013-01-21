@@ -7,6 +7,7 @@ from guardian.admin import GuardedModelAdmin
 
 from cityapp.apps.city_viewer.models import *
 from cityapp.apps.city_viewer.utils.export import *
+from cityapp.apps.city_viewer.utils.syncdata import *
 
 class AreaAdmin(GuardedModelAdmin):
     list_display = ('zh_name', 'author', 'topic_num', 'place_num')
@@ -39,6 +40,12 @@ class AreaAdmin(GuardedModelAdmin):
         self.message_user(request, "Dump数据成功")
 
     dump_data.short_description = 'Dump 数据'
+
+    def sync_pics(self, request, queryset):
+        for area in queryset:
+            for pic in area.picture_set.all():
+                pic.upload()
+        self.message_user(request, "同步图片成功")
 
 
 class PlaceAdmin(GuardedModelAdmin):
@@ -83,13 +90,23 @@ class TripTipAdmin(GuardedModelAdmin):
 
 
 class OfflineMapAdmin(GuardedModelAdmin):
-    list_display = ('in_area', 'center', 'min_zoom', 'max_zoom', 'map_size')
-
+    list_display = ('in_area', 'center', 'min_zoom', 'max_zoom', 'map_size', 'url')
+    actions = ['upload']
     def map_size(self, obj):
         return int(obj.file.size)/1024/1000
 
     map_size.short_description = '文件大小'
 
+    def upload(self, request, queryset):
+        for item in queryset:
+            self.message_user(request, "正在上传%s离线地图" % item.in_area)
+            result = item.upload()
+            if result:
+                self.message_user(request, "上传成功")
+            else:
+                self.message_user(request, "上传失败")
+
+    upload.short_description = '上传离线地图'
 
 class APPInfoAdmin(GuardedModelAdmin):
     list_display = ('name', 'area', 'asid', 'liked_num', 'installed_num', 'sell_date', 'msg')

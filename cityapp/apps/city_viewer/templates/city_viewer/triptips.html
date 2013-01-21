@@ -69,7 +69,6 @@
         .content .description {
             padding:10px;
             display:block;
-            border-bottom: 1px #DFDFDF dashed;
         }
         .content .description.loading {
             min-height:36px;
@@ -262,7 +261,7 @@
             <h1>{{ item.title }}</h1>
         </td>
     </tr>
-    <tr type="help" id="description-{{ item.id }}" style="display: none; " loaded="true">
+    <tr type="help" id="description-{{ item.id }}" style="display: none;border-bottom: 1px #DFDFDF dashed;" loaded="true">
         <td class="triangle-none">&nbsp;</td>
         <td class="description" id="description-show-{{ item.id }}">
             <h2>{{ item.title }}</h2>
