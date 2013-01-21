@@ -8,7 +8,6 @@ amqp==1.0.6
 anyjson==0.3.3
 billiard==2.7.3.19
 celery==3.0.12
-django-bootstrap-toolkit==2.5.10
 django-celery==3.0.11
 django-configurations==0.2
 django-dajaxice==0.5.2
